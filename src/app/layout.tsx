@@ -93,6 +93,33 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+console.log(
+  "%c" +
+  "\\n" +
+  "    ____  _       _ _            \\n" +
+  "   / ___|| |_ ___| | | __ _ _ __\\n" +
+  "   \\\\___ \\\\| __/ _ \\\\ | |/ _\` | '__|\\n" +
+  "    ___) | ||  __/ | | (_| | |  \\n" +
+  "   |____/ \\\\__\\\\___|_|_|\\\\__,_|_|  \\n" +
+  "                                 \\n" +
+  "   🌴 stellar-web.dev            \\n" +
+  "   Built by Jelte Homminga       \\n" +
+  "   Next.js 16 · React 19 · Bali  \\n" +
+  "                                 \\n" +
+  "   Try: Konami code, type \\"coffee\\" or \\"claude\\"\\n",
+  "color: #0c8a9e; font-family: monospace; font-size: 12px; line-height: 1.4"
+);
+console.log(
+  "%c🤖 AI-augmented with Cursor & Claude%c — because shipping > debating",
+  "color: #8b5cf6; font-weight: bold; font-size: 13px",
+  "color: #5c4033; font-size: 13px"
+);
+`,
+          }}
+        />
       </head>
       <body
         className={`${lilitaOne.variable} ${nunito.variable} ${firaCode.variable}`}
