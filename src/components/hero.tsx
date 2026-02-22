@@ -96,7 +96,7 @@ export const Hero = () => (
                 width={533}
                 height={800}
                 sizes="(max-width: 768px) 250px, 350px"
-                quality={65}
+                quality={60}
                 priority
                 fetchPriority="high"
                 className="block w-full"
