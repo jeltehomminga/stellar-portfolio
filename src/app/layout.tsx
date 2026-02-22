@@ -2,10 +2,7 @@ import type { Metadata } from "next"
 import { Lilita_One, Nunito, Fira_Code } from "next/font/google"
 import "./globals.css"
 import { OceanWaves } from "@/components/ocean-waves"
-import { FloatingEmoji } from "@/components/floating-emoji"
-import { ToastSystem } from "@/components/toast-system"
-import { CursorTrail } from "@/components/cursor-trail"
-import { ScrollRevealInit } from "@/components/scroll-reveal-init"
+import { ClientExtras } from "@/components/client-extras"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -136,11 +133,8 @@ console.log(
           Skip to content
         </a>
         <OceanWaves />
-        <FloatingEmoji />
-        <ToastSystem />
         {children}
-        <ScrollRevealInit />
-        <CursorTrail />
+        <ClientExtras />
         <Analytics />
         <SpeedInsights />
       </body>
