@@ -28,6 +28,8 @@ export const FloatingEmoji = () => {
   useEffect(() => {
     const resizeFloaters = () => {
       if (wrapRef.current) {
+        // Temporarily collapse to avoid measuring our own height
+        wrapRef.current.style.height = "0px"
         wrapRef.current.style.height = `${document.documentElement.scrollHeight}px`
       }
     }

@@ -7,7 +7,7 @@ const contactLinks = [
 ]
 
 export const Contact = () => (
-  <section id="contact" className="relative z-[1] bg-sand px-8 py-24 lg:px-12 lg:py-28">
+  <section id="contact" className="relative z-[1] bg-sand px-8 pt-24 pb-12 lg:px-12 lg:pt-28 lg:pb-16">
     <div className="mx-auto max-w-[1440px]">
       <ScrollReveal>
         <div
