@@ -95,7 +95,8 @@ export const Hero = () => (
                 alt="Jelte Homminga — caricature in Bali with padel racket, React logos, and developer toast notifications"
                 width={533}
                 height={800}
-                sizes="(max-width: 768px) 260px, 352px"
+                sizes="(max-width: 768px) 250px, 350px"
+                quality={65}
                 priority
                 fetchPriority="high"
                 className="block w-full"
