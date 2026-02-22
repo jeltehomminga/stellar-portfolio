@@ -27,10 +27,18 @@ const timeline = [
     ringColor: "shadow-[0_0_0_2px_var(--ocean-light)]",
   },
   {
+    year: "2020",
+    role: "Frontend Developer",
+    company: "DGN · Netherlands",
+    desc: "React development for digital government services.",
+    dotColor: "bg-palm",
+    ringColor: "shadow-[0_0_0_2px_var(--palm)]",
+  },
+  {
     year: "2019 — 2020",
     role: "React Developer",
     company: "De Nationale Hypotheekbond · Netherlands",
-    desc: "Specialized in React development with Redux and Styled Components for mortgage platform applications.",
+    desc: "First developer role after the Ironhack bootcamp. Built mortgage platform features with React, Redux, and Styled Components.",
     dotColor: "bg-sunset-glow",
     ringColor: "shadow-[0_0_0_2px_var(--sunset-glow)]",
   },
@@ -38,7 +46,7 @@ const timeline = [
     year: "2008 — 2019",
     role: "Application Consultant → Agile Engineer → Developer",
     company: "Nuon (Vattenfall) · Netherlands",
-    desc: "Decade-long journey from process improver to functional designer to application consultant for Siebel CRM and SAP. Transitioned into development via Angular, then completed the Ironhack bootcamp (2019). This business background still shapes how I think about product.",
+    desc: "Started as a process improver, grew into application consultant for Siebel CRM and SAP. Completed the Ironhack bootcamp in 2019 to make the switch to frontend development. This business background still shapes how I think about product.",
     dotColor: "bg-sunset",
     ringColor: "shadow-[0_0_0_2px_var(--sunset)]",
   },
@@ -60,8 +68,8 @@ export const Experience = () => (
             Experience
           </div>
           <p className="mt-2 max-w-[600px] text-base leading-relaxed text-text-mid">
-            From a decade at Nuon (Vattenfall) to frontend engineering at
-            Luminus — now shipping from Bali.
+            From IT career changer to enterprise frontend engineer — now
+            shipping from Bali.
           </p>
         </div>
       </ScrollReveal>

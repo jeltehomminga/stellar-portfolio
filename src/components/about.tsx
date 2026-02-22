@@ -18,8 +18,8 @@ export const About = () => (
             About Me
           </div>
           <p className="mt-2 max-w-[600px] text-base leading-relaxed text-text-mid">
-            From application consultant at Nuon to AI-augmented frontend
-            engineer — shipping enterprise systems from a Bali beach desk.
+            From IT career changer to AI-augmented frontend engineer —
+            shipping enterprise systems from a Bali beach desk.
           </p>
         </div>
       </ScrollReveal>
@@ -38,12 +38,13 @@ export const About = () => (
               Next.js, and React Native.
             </p>
             <p className="mt-3">
-              I spent 10 years at Nuon (Vattenfall) as application consultant and
-              agile engineer before completing the Ironhack bootcamp in 2019.
-              Since then, I&apos;ve been a core contributor to the My Luminus
-              energy platform (&ldquo;Product of the Year 2026&rdquo;), built
-              React Native apps at KLM Health Services, and designed caching
-              strategies that handle production traffic.
+              After a decade in IT at Vattenfall, I completed the Ironhack
+              bootcamp in 2019 and went all-in on frontend development. I cut my
+              teeth at De Nationale Hypotheekbond and DGN, built React Native
+              apps at KLM Health Services, and became a core contributor to the
+              My Luminus energy platform (&ldquo;Product of the Year
+              2026&rdquo;) — designing caching strategies and auth flows that
+              handle production traffic at scale.
             </p>
             <p className="mt-3">
               I&apos;m an early adopter of AI-powered development — five years of
