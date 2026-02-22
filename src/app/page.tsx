@@ -12,14 +12,16 @@ import { Footer } from "@/components/footer"
 const Home = () => (
   <>
     <Navigation />
-    <Hero />
-    <About />
-    <TechStack />
-    <Philosophy />
-    <Projects />
-    <Now />
-    <Experience />
-    <Contact />
+    <main>
+      <Hero />
+      <About />
+      <TechStack />
+      <Philosophy />
+      <Projects />
+      <Now />
+      <Experience />
+      <Contact />
+    </main>
     <Footer />
   </>
 )
