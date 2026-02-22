@@ -201,6 +201,7 @@
   width: 200%;
   height: 100%;
   background-repeat: repeat-x;
+  will-change: transform;
 }
 .wave:nth-child(1) {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,10 400,70 600,40 C800,10 1000,70 1200,40 L1200,80 L0,80Z' fill='%230c8a9e' opacity='.45'/%3E%3C/svg%3E");
