@@ -14,18 +14,23 @@ const lilitaOne = Lilita_One({
   subsets: ["latin"],
   variable: "--font-lilita-one",
   display: "swap",
+  adjustFontFallback: true,
+  preload: true,
 })
 
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
   display: "swap",
+  adjustFontFallback: true,
+  preload: true,
 })
 
 const firaCode = Fira_Code({
   subsets: ["latin"],
   variable: "--font-fira-code",
-  display: "swap",
+  display: "optional",
+  preload: false,
 })
 
 export const metadata: Metadata = {
