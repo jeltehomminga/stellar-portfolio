@@ -6,6 +6,8 @@ import { FloatingEmoji } from "@/components/floating-emoji"
 import { ToastSystem } from "@/components/toast-system"
 import { CursorTrail } from "@/components/cursor-trail"
 import { ScrollRevealInit } from "@/components/scroll-reveal-init"
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const lilitaOne = Lilita_One({
   weight: "400",
@@ -107,6 +109,8 @@ export default function RootLayout({
         {children}
         <ScrollRevealInit />
         <CursorTrail />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
