@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og"
 import { readFile } from "node:fs/promises"
 import { join } from "node:path"
+import { existsSync } from "node:fs"
 
 export const alt = "Jelte Homminga — AI-first Frontend Engineer"
 export const size = { width: 1200, height: 630 }
@@ -60,7 +61,7 @@ const variantA = (img: string) => (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 320 }}>
       <div style={{ display: "flex", width: 280, height: 380, borderRadius: 20, overflow: "hidden", boxShadow: "0 16px 50px rgba(6,85,99,0.18)", transform: "rotate(1.5deg)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={img} alt="" width={280} height={380} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src={img} alt="" width={280} height={380} style={{ width: "100%", height: "100%" }} />
       </div>
     </div>
     {bar}
@@ -112,16 +113,43 @@ const variantC = (img: string) => (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "45%", background: `linear-gradient(165deg, ${c.sand}, ${c.sandWarm})` }}>
       <div style={{ display: "flex", width: 300, height: 400, borderRadius: 20, overflow: "hidden", boxShadow: "0 20px 60px rgba(6,85,99,0.2)", transform: "rotate(2deg)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={img} alt="" width={300} height={400} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <img src={img} alt="" width={300} height={400} style={{ width: "100%", height: "100%" }} />
       </div>
     </div>
     {bar}
   </div>
 )
 
+const detectMimeType = (buffer: Buffer) => {
+  if (buffer[0] === 0x89 && buffer[1] === 0x50) return "image/png"
+  if (buffer[0] === 0xff && buffer[1] === 0xd8) return "image/jpeg"
+  return "image/png"
+}
+
+const getImageSrc = async () => {
+  // Try filesystem first (works locally and during Vercel build)
+  const localPath = join(process.cwd(), "public/images/hero-caricature-og.png")
+  if (existsSync(localPath)) {
+    const buffer = await readFile(localPath)
+    const mime = detectMimeType(buffer)
+    return `data:${mime};base64,${buffer.toString("base64")}`
+  }
+
+  // Fallback: fetch from the deployed URL
+  const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "https://stellar-web.dev"
+
+  const res = await fetch(`${baseUrl}/images/hero-caricature-og.png`)
+  const buffer = Buffer.from(await res.arrayBuffer())
+  const mime = detectMimeType(buffer)
+  return `data:${mime};base64,${buffer.toString("base64")}`
+}
+
 const Image = async () => {
-  const imgBuffer = await readFile(join(process.cwd(), "public/images/hero-caricature.png"))
-  const imgSrc = `data:image/png;base64,${imgBuffer.toString("base64")}`
+  const imgSrc = await getImageSrc()
 
   const variants = [
     () => variantA(imgSrc),
