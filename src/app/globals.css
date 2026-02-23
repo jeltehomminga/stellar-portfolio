@@ -108,7 +108,7 @@
   /* Fonts */
   --font-heading: var(--font-lilita-one);
   --font-sans: var(--font-nunito);
-  --font-mono: var(--font-fira-code);
+  --font-mono: ui-monospace, monospace;
 
   /* Sidebar tokens (required by shadcn) */
   --color-sidebar-ring: var(--sidebar-ring);
@@ -224,6 +224,33 @@
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* Reduce wave animation on mobile to save GPU */
+@media (max-width: 768px) {
+  .ocean-bg {
+    height: 50px;
+  }
+  .wave {
+    will-change: auto;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .wave,
+  .animate-fade-up,
+  .animate-fade-up-1,
+  .animate-fade-up-2,
+  .animate-fade-up-3,
+  .animate-fade-up-4,
+  .animate-fade-up-5,
+  .animate-fade-up-6,
+  .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

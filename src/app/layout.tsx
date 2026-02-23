@@ -88,6 +88,19 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+      </head>
+      <body
+        className={`${lilitaOne.variable} ${nunito.variable}`}
+      >
+        <a
+          href="#about"
+          className="fixed left-2 top-2 z-[999] -translate-y-16 rounded-lg bg-ocean px-4 py-2 text-sm font-bold text-white transition-transform focus:translate-y-0"
+        >
+          Skip to content
+        </a>
+        <OceanWaves />
+        {children}
+        <ClientExtras />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -115,19 +128,6 @@ console.log(
 `,
           }}
         />
-      </head>
-      <body
-        className={`${lilitaOne.variable} ${nunito.variable}`}
-      >
-        <a
-          href="#about"
-          className="fixed left-2 top-2 z-[999] -translate-y-16 rounded-lg bg-ocean px-4 py-2 text-sm font-bold text-white transition-transform focus:translate-y-0"
-        >
-          Skip to content
-        </a>
-        <OceanWaves />
-        {children}
-        <ClientExtras />
         <Analytics />
         <SpeedInsights />
       </body>
