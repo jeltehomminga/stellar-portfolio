@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Lilita_One, Nunito, Fira_Code } from "next/font/google"
+import { Lilita_One, Nunito } from "next/font/google"
 import "./globals.css"
 import { OceanWaves } from "@/components/ocean-waves"
 import { ClientExtras } from "@/components/client-extras"
@@ -21,13 +21,6 @@ const nunito = Nunito({
   display: "optional",
   adjustFontFallback: true,
   preload: true,
-})
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  variable: "--font-fira-code",
-  display: "optional",
-  preload: false,
 })
 
 export const metadata: Metadata = {
@@ -124,7 +117,7 @@ console.log(
         />
       </head>
       <body
-        className={`${lilitaOne.variable} ${nunito.variable} ${firaCode.variable}`}
+        className={`${lilitaOne.variable} ${nunito.variable}`}
       >
         <a
           href="#about"
