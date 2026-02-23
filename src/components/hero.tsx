@@ -93,9 +93,9 @@ export const Hero = () => (
               <Image
                 src="/images/hero-caricature.jpg"
                 alt="Jelte Homminga — caricature in Bali with padel racket, React logos, and developer toast notifications"
-                width={533}
-                height={800}
-                sizes="(max-width: 768px) 250px, 350px"
+                width={1024}
+                height={1536}
+                sizes="(max-width: 768px) 280px, 400px"
                 quality={60}
                 priority
                 fetchPriority="high"
