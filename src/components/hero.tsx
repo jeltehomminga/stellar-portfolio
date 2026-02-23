@@ -104,13 +104,13 @@ export const Hero = () => (
             </div>
             {/* Toast floats */}
             <span
-              className="absolute top-[6%] -right-4 z-[3] flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 py-2 text-sm font-extrabold text-palm shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-md:-right-0.5 max-md:top-[4%] max-md:px-2.5 max-md:py-1.5 max-md:text-xs"
+              className="absolute top-[6%] -right-4 z-[3] flex items-center gap-1 whitespace-nowrap rounded-md border-l-[3px] border-l-palm bg-white px-2.5 py-1.5 text-xs font-bold text-palm shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-md:-right-0.5 max-md:top-[4%] max-md:px-2 max-md:py-1 max-md:text-[10px]"
               style={{ animation: "toastBob 3s ease-in-out infinite" }}
             >
               💯 Lighthouse 100
             </span>
             <span
-              className="absolute top-[28%] -left-6 z-[3] flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 py-2 text-sm font-extrabold text-ocean shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-md:-left-1 max-md:px-2.5 max-md:py-1.5 max-md:text-xs"
+              className="absolute top-[28%] -left-6 z-[3] flex items-center gap-1 whitespace-nowrap rounded-md border-l-[3px] border-l-ocean bg-white px-2.5 py-1.5 text-xs font-bold text-ocean shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-md:-left-1 max-md:px-2 max-md:py-1 max-md:text-[10px]"
               style={{
                 animation: "toastBob 3s ease-in-out infinite",
                 animationDelay: "-0.8s",
@@ -119,7 +119,7 @@ export const Hero = () => (
               🚀 Shipped!
             </span>
             <span
-              className="absolute top-1/2 -right-5 z-[3] flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 py-2 text-sm font-extrabold text-lava shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-md:-right-0.5 max-md:px-2.5 max-md:py-1.5 max-md:text-xs"
+              className="absolute top-1/2 -right-5 z-[3] flex items-center gap-1 whitespace-nowrap rounded-md border-l-[3px] border-l-lava bg-white px-2.5 py-1.5 text-xs font-bold text-lava shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-md:-right-0.5 max-md:px-2 max-md:py-1 max-md:text-[10px]"
               style={{
                 animation: "toastBob 3s ease-in-out infinite",
                 animationDelay: "-1.5s",
@@ -128,22 +128,22 @@ export const Hero = () => (
               ⚠️ Bug!
             </span>
             <span
-              className="absolute bottom-[22%] -left-8 z-[3] flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 py-2 text-sm font-extrabold text-palm-dark shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-md:-left-1 max-md:bottom-[18%] max-md:px-2.5 max-md:py-1.5 max-md:text-xs"
+              className="absolute bottom-[22%] -left-8 z-[3] flex items-center gap-1 whitespace-nowrap rounded-md border-l-[3px] border-l-palm-dark bg-white px-2.5 py-1.5 text-xs font-bold text-palm-dark shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-md:-left-1 max-md:bottom-[18%] max-md:px-2 max-md:py-1 max-md:text-[10px]"
               style={{
                 animation: "toastBob 3s ease-in-out infinite",
                 animationDelay: "-2s",
               }}
             >
-              A11y 100%
+              ♿ A11y 100%
             </span>
             <span
-              className="absolute bottom-[6%] -right-3 z-[3] flex items-center gap-1.5 whitespace-nowrap rounded-xl bg-white px-3.5 py-2 text-sm font-extrabold text-sunset shadow-[0_4px_20px_rgba(0,0,0,0.1)] max-md:-right-0.5 max-md:bottom-[4%] max-md:px-2.5 max-md:py-1.5 max-md:text-xs"
+              className="absolute bottom-[6%] -right-3 z-[3] flex items-center gap-1 whitespace-nowrap rounded-md border-l-[3px] border-l-sunset bg-white px-2.5 py-1.5 text-xs font-bold text-sunset shadow-[0_2px_12px_rgba(0,0,0,0.08)] max-md:-right-0.5 max-md:bottom-[4%] max-md:px-2 max-md:py-1 max-md:text-[10px]"
               style={{
                 animation: "toastBob 3s ease-in-out infinite",
                 animationDelay: "-2.8s",
               }}
             >
-              CWV all green
+              ⚡ CWV all green
             </span>
           </div>
         </HeroParallax>
