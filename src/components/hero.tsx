@@ -32,7 +32,7 @@ const differentiators = [
 export const Hero = () => (
   <section
     id="hero"
-    className="relative flex min-h-screen items-center justify-center overflow-hidden px-8 pt-24 pb-12 lg:px-12"
+    className="relative flex min-h-screen items-start justify-center overflow-hidden px-8 pt-[max(10vh,80px)] pb-12 md:items-center md:pt-24 lg:px-12"
     style={{
       background:
         "radial-gradient(ellipse at 25% 8%, rgba(135,206,235,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 90%, rgba(12,138,158,0.06) 0%, transparent 40%), linear-gradient(180deg, var(--sand) 0%, var(--sand-warm) 100%)",
