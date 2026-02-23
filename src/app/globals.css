@@ -254,7 +254,17 @@
   }
 }
 
-/* Hero fade up animation */
+/* Hero fade up animation — opacity-only to prevent CLS */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Full fade-up with transform — safe for below-the-fold content */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -268,31 +278,31 @@
 
 .animate-fade-up {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 .animate-fade-up-1 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
 }
 .animate-fade-up-2 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards;
 }
 .animate-fade-up-3 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
 }
 .animate-fade-up-4 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
 }
 .animate-fade-up-5 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards;
 }
 .animate-fade-up-6 {
   opacity: 0;
-  animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
 }
 
 /* Floater animation */

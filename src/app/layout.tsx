@@ -10,7 +10,7 @@ const lilitaOne = Lilita_One({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-lilita-one",
-  display: "optional",
+  display: "swap",
   adjustFontFallback: true,
   preload: true,
 })
@@ -18,7 +18,7 @@ const lilitaOne = Lilita_One({
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
-  display: "optional",
+  display: "swap",
   adjustFontFallback: true,
   preload: true,
 })
