@@ -88,14 +88,14 @@ export const Hero = () => (
         </div>
 
         <HeroParallax className="max-md:order-2">
-          <div className="relative mx-auto max-w-[400px] max-md:max-w-[280px]">
+          <div className="relative mx-auto max-w-[400px] max-md:max-w-[340px]">
             <div className="overflow-hidden rounded-[20px] shadow-[0_16px_50px_rgba(6,85,99,0.18),0_3px_10px_rgba(0,0,0,0.06)] transition-transform duration-[350ms] hover:rotate-0 hover:scale-[1.02] md:rotate-[1.5deg]">
               <Image
                 src="/images/hero-caricature.jpg"
                 alt="Jelte Homminga — caricature in Bali with padel racket, React logos, and developer toast notifications"
                 width={1024}
                 height={1536}
-                sizes="(max-width: 768px) 280px, 400px"
+                sizes="(max-width: 768px) 340px, 400px"
                 quality={60}
                 priority
                 fetchPriority="high"
