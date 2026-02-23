@@ -81,12 +81,12 @@ export const ToastSystem = () => {
   }, [showToast])
 
   return (
-    <div className="pointer-events-none fixed top-14 right-5 z-[200] flex flex-col gap-2.5">
+    <div className="pointer-events-none fixed top-14 right-4 z-[200] flex flex-col gap-2">
       {toastConfigs.map((toast) => (
         <div
           key={toast.id}
           className={cn(
-            "pointer-events-auto flex items-center gap-2.5 rounded-2xl border-l-[4px] bg-white px-5 py-3 text-base font-extrabold shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-500",
+            "pointer-events-auto flex items-center gap-1.5 rounded-md border-l-[3px] bg-white px-3 py-2 text-xs font-bold shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-500",
             "translate-x-[130%] opacity-0",
             toast.color,
             toast.borderColor,
@@ -94,7 +94,7 @@ export const ToastSystem = () => {
           )}
           style={{ transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
-          <span className="text-xl">{toast.emoji}</span> {toast.text}
+          <span className="text-sm">{toast.emoji}</span> {toast.text}
         </div>
       ))}
     </div>
