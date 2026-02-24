@@ -1,7 +1,7 @@
 import { ScrollReveal } from "@/components/scroll-reveal"
 
 const contactLinks = [
-  { href: "mailto:jelte@stellarwebdev.com", icon: "✉️", label: "Email" },
+  { href: "mailto:stellarweb.bali@gmail.com", icon: "✉️", label: "Email" },
   { href: "https://github.com/jeltehomminga", icon: "🐙", label: "GitHub", external: true },
   { href: "https://linkedin.com/in/jeltehomminga", icon: "💼", label: "LinkedIn", external: true },
 ]
