@@ -39,8 +39,8 @@ export const About = () => (
             </p>
             <p className="mt-3">
               After a decade in IT at Vattenfall, I completed the Ironhack
-              bootcamp in 2019 and went all-in on frontend development. I cut my
-              teeth at DGN and De Nationale Hypotheekbond, built React Native
+              bootcamp in 2019 and went all-in on frontend development. I started
+              at DGN and De Nationale Hypotheekbond, built React Native
               apps at KLM Health Services, and became a core contributor to the
               My Luminus energy platform (&ldquo;Product of the Year
               2026&rdquo;) — designing caching strategies and auth flows that

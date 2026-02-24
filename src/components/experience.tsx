@@ -83,7 +83,8 @@ export const Experience = () => (
             <div key={item.year} className="relative mb-8">
               {/* Dot */}
               <div
-                className={`absolute -left-10 top-1 size-[13px] rounded-full border-[3px] border-sand-warm ${item.dotColor} ${item.ringColor}`}
+                className={`absolute top-1 size-[13px] rounded-full border-[3px] border-sand-warm ${item.dotColor} ${item.ringColor}`}
+                style={{ left: "calc(-2.5rem - 5px)" }}
               />
               <div className="text-[0.78rem] font-extrabold text-ocean">
                 {item.year}
@@ -103,7 +104,7 @@ export const Experience = () => (
       </ScrollReveal>
 
       <ScrollReveal delay={0.2}>
-        <div className="mt-10 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
+        <div className="mt-10 grid grid-cols-4 gap-4 max-md:grid-cols-2">
           {funFacts.map((fact) => (
             <Card
               key={fact.text}

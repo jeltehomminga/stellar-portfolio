@@ -31,6 +31,8 @@ One of the more ambitious ideas from the chat phase was designing three switchab
 
 <ThemeGrid />
 
+For the visual design, I asked Claude to propose available skills — specialized prompt packages that give it domain expertise. It suggested the `frontend-design` skill, which turned out to be a great call. It pushed toward distinctive, intentional design choices instead of the generic purple-gradient-with-glassmorphism aesthetic that every AI-generated site seems to default to these days. If you've seen five "AI-built" portfolios this week and they all look the same — that's what I wanted to avoid.
+
 In the end, I focused on the tropical theme. It just fit — I'm a Dutch developer working from Bali, so the ocean blues, warm sand tones, and floating palm tree emoji felt authentic rather than gimmicky. The other themes became a "future TODO" for a theme switcher, and honestly, narrowing scope early was the right call.
 
 ### A 600KB HTML Prototype
@@ -67,11 +69,19 @@ One architectural decision I'm particularly happy with: almost everything is a S
 
 All the fun-but-non-critical client-side stuff (floating emoji, toast notifications, the Konami code cursor trail) gets loaded through a single `ClientExtras` wrapper using dynamic imports with `ssr: false`. Zero impact on initial load.
 
+### Plan Mode: Think Before You Code
+
+One thing I do with Claude Code almost every time — and did heavily on this project — is use Plan Mode. Instead of letting Claude jump straight into writing code, I tell it to plan first. It reads the relevant files, thinks through the approach, and presents a step-by-step plan before touching anything.
+
+Why this matters: when you're porting a 600KB HTML prototype into 18 React components, there are a lot of decisions to make — component boundaries, Server vs Client, where state lives, how to handle dynamic imports. If you let Claude Code loose without planning, it'll make reasonable-but-suboptimal choices and you'll spend time undoing them. With Plan Mode, I review the approach first, push back on anything I disagree with, and _then_ let it execute. The result is cleaner code with fewer iterations.
+
+It also keeps you in the driver's seat. AI tools work best when you give them clear direction — Plan Mode is how I make sure that direction is explicit rather than implied.
+
 ### What Claude Code Did Well
 
 Claude Code was excellent at the mechanical parts of the port — breaking the monolithic HTML into 18 React components, converting inline styles to Tailwind classes, setting up the file structure. It also handled the SEO layer well: structured data, OG images with three rotating variants, sitemap, robots.txt.
 
-Where it needed guidance: architectural decisions about component boundaries, what should be a Server vs Client Component, and performance-critical choices. AI tools work best when you give them clear direction and let them execute.
+Where it needed guidance: architectural decisions about component boundaries, what should be a Server vs Client Component, and performance-critical choices. Plan Mode helped here — by reviewing its proposed approach before execution, I could steer those decisions early rather than fixing them after the fact.
 
 ## The Performance Deep Dive
 

@@ -25,21 +25,21 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stellar-web.dev"),
-  title: "Jelte Homminga — Senior React & Expo Engineer · Bali",
+  title: "Jelte Homminga — AI-first Frontend Engineer · Bali",
   description:
-    "Senior product-focused React, React Native & Expo engineer. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
+    "AI-first Frontend Engineer. Building high-performance consumer apps at scale with React, Next.js & Expo. Based in Bali, shipping for European enterprise.",
   openGraph: {
-    title: "Jelte Homminga — Senior React & Expo Engineer",
+    title: "Jelte Homminga — AI-first Frontend Engineer",
     description:
-      "Senior product-focused React, React Native & Expo engineer. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
+      "Building high-performance consumer apps at scale with React, Next.js & Expo. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
     type: "website",
     url: "https://stellar-web.dev",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jelte Homminga — Senior React & Expo Engineer",
+    title: "Jelte Homminga — AI-first Frontend Engineer",
     description:
-      "Senior product-focused React, React Native & Expo engineer. Based in Bali, shipping for European enterprise.",
+      "Building high-performance consumer apps at scale. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
   },
   alternates: {
     canonical: "https://stellar-web.dev",
@@ -50,7 +50,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Jelte Homminga",
-  jobTitle: "Senior React & Expo Engineer",
+  jobTitle: "AI-first Frontend Engineer",
   url: "https://stellar-web.dev",
   sameAs: [
     "https://github.com/jeltehomminga",
