@@ -48,7 +48,7 @@ export const About = () => (
             </p>
             <p className="mt-3">
               I&apos;m an early adopter of AI-powered development — five years of
-              experience with AI coding tools, from TabNine in 2021 to{" "}
+              experience with AI coding tools, from TabNine in 2020 to{" "}
               <strong className="text-ocean-deep">Cursor</strong> and{" "}
               <strong className="text-ocean-deep">Claude Code</strong> today. Not
               a gimmick, but a genuine multiplier that lets me ship faster and
