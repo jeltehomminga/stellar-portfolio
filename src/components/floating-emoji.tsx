@@ -42,9 +42,10 @@ export const FloatingEmoji = () => {
 
     resizeFloaters()
     window.addEventListener("resize", resizeFloaters)
-    const observer = new MutationObserver(resizeFloaters)
-    observer.observe(document.body, { childList: true, subtree: true })
-    const timeout = setTimeout(resizeFloaters, 1000)
+    // ResizeObserver catches body size changes even without DOM mutations
+    // (e.g., images loading, fonts settling, MDX content reflowing)
+    const resizeObserver = new ResizeObserver(resizeFloaters)
+    resizeObserver.observe(document.body)
 
     // Randomize floater animations
     wrapRef.current?.querySelectorAll<HTMLElement>(".floater").forEach((el) => {
@@ -54,8 +55,7 @@ export const FloatingEmoji = () => {
 
     return () => {
       window.removeEventListener("resize", resizeFloaters)
-      observer.disconnect()
-      clearTimeout(timeout)
+      resizeObserver.disconnect()
     }
   }, [])
 
