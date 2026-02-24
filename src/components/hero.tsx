@@ -38,7 +38,7 @@ export const Hero = () => (
         "radial-gradient(ellipse at 25% 8%, rgba(135,206,235,0.15) 0%, transparent 55%), radial-gradient(ellipse at 85% 90%, rgba(12,138,158,0.06) 0%, transparent 40%), linear-gradient(180deg, var(--sand) 0%, var(--sand-warm) 100%)",
     }}
   >
-    <div className="relative z-[2] mx-auto w-full max-w-[1440px]">
+    <div className="relative z-[5] mx-auto w-full max-w-[1200px]">
       {/* Hero top: text + image */}
       <div className="mb-14 grid items-center gap-6 max-md:grid-cols-1 max-md:text-center md:gap-16 md:grid-cols-[1.1fr_0.9fr]">
         <div className="animate-fade-up max-md:contents">

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet"
@@ -11,6 +12,7 @@ const navLinks = [
   { href: "#philosophy", label: "Philosophy" },
   { href: "#projects", label: "Projects" },
   { href: "#now", label: "Now" },
+  { href: "/blog", label: "Blog" },
   { href: "#contact", label: "Contact" },
 ]
 
@@ -20,6 +22,13 @@ const brandNamesShort = ["Stellar", "Jelte"]
 export const Navigation = () => {
   const [scrolled, setScrolled] = useState(false)
   const [brandIndex, setBrandIndex] = useState(0)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
+
+  const resolveHref = (href: string) => {
+    if (href.startsWith("/")) return href
+    return isHome ? href : `/${href}`
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -42,9 +51,9 @@ export const Navigation = () => {
         scrolled && "bg-sand/95 shadow-[0_4px_30px_rgba(6,85,99,0.1)]"
       )}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between">
         <a
-          href="#"
+          href="/"
           className="flex items-center gap-1.5 font-heading text-xl text-ocean-deep no-underline transition-transform duration-300 hover:scale-[1.04]"
         >
           <span className="grid size-[30px] -rotate-[5deg] place-items-center rounded-lg bg-gradient-to-br from-ocean to-palm text-xs text-white">
@@ -87,7 +96,7 @@ export const Navigation = () => {
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
-                href={link.href}
+                href={resolveHref(link.href)}
                 className="rounded-full px-3.5 py-1.5 text-[0.82rem] font-bold text-ocean-deep no-underline transition-all duration-300 hover:-translate-y-px hover:bg-ocean hover:text-white"
               >
                 {link.label}
@@ -108,7 +117,7 @@ export const Navigation = () => {
           <SheetContent side="right" className="bg-sand/97 backdrop-blur-xl">
             <nav className="mt-16 flex flex-col gap-1">
               {navLinks.map((link) => (
-                <SheetClose key={link.href} nativeButton={false} render={<a href={link.href} />}>
+                <SheetClose key={link.href} nativeButton={false} render={<a href={resolveHref(link.href)} />}>
                   <span className="block rounded-full px-4 py-3 text-center text-sm font-bold text-ocean-deep transition-all duration-300 hover:bg-ocean hover:text-white">
                     {link.label}
                   </span>

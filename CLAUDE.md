@@ -1,7 +1,9 @@
 # Stellar Web Development — Portfolio Project
 
 ## Owner
+
 **Jelte Homminga** — Senior React & Expo Engineer, based in Bali, Indonesia.
+
 - Company: **Stellar Web Development**
 - Site: [stellar-web.dev](https://stellar-web.dev)
 - GitHub: [jeltehomminga](https://github.com/jeltehomminga)
@@ -16,10 +18,12 @@
 **Live at [stellar-web.dev](https://stellar-web.dev)** — deployed on Vercel.
 
 Lighthouse scores:
+
 - Desktop: **100 / 100 / 100 / 100**
 - Mobile: **92 / 100 / 100 / 100**
 
 ### Tech Stack
+
 - **Next.js 16.1.6** (Turbopack, App Router)
 - **React 19.2.3**
 - **TypeScript 5**
@@ -28,29 +32,34 @@ Lighthouse scores:
 - Fonts: Lilita One (headings), Nunito (body) — via `next/font`
 
 ### Component Architecture
+
 All sections are Server Components except where JS interactivity is needed:
 
-| Component | Type | Purpose |
-|-----------|------|---------|
-| `hero.tsx` | Server | Hero section with title, badge, CTAs, caricature image, toast badges |
-| `hero-parallax.tsx` | Client | Mouse-tracking parallax on hero image (desktop only) |
-| `about.tsx` | Server | Bio, highlight cards |
-| `tech-stack.tsx` | Server | Grouped tech pills by competence area |
-| `philosophy.tsx` | Server | 6 engineering philosophy cards |
-| `projects.tsx` | Server | Project showcase cards |
-| `now.tsx` | Server | Current focus items |
-| `experience.tsx` | Server | Career timeline + fun facts |
-| `contact.tsx` | Server | Contact section with CTAs |
-| `navigation.tsx` | Client | Sticky nav with mobile hamburger |
-| `footer.tsx` | Server | Footer with links |
-| `ocean-waves.tsx` | Server | CSS-animated SVG waves (fixed bottom) |
-| `client-extras.tsx` | Client | Lazy wrapper for non-critical JS (dynamic imports, ssr: false) |
-| `floating-emoji.tsx` | Client | Decorative emoji scattered along page edges |
-| `toast-system.tsx` | Client | Slide-in toast notifications ("Coffee break", "Claude says hi") |
-| `cursor-trail.tsx` | Client | Konami code Easter egg (padel ball cursor trail) |
-| `scroll-reveal-init.tsx` | Client | IntersectionObserver for scroll reveal animations |
+| Component                | Type   | Purpose                                                              |
+| ------------------------ | ------ | -------------------------------------------------------------------- |
+| `hero.tsx`               | Server | Hero section with title, badge, CTAs, caricature image, toast badges |
+| `hero-parallax.tsx`      | Client | Mouse-tracking parallax on hero image (desktop only)                 |
+| `about.tsx`              | Server | Bio, highlight cards                                                 |
+| `tech-stack.tsx`         | Server | Grouped tech pills by competence area                                |
+| `philosophy.tsx`         | Server | 6 engineering philosophy cards                                       |
+| `projects.tsx`           | Server | Project showcase cards                                               |
+| `now.tsx`                | Server | Current focus items                                                  |
+| `experience.tsx`         | Server | Career timeline + fun facts                                          |
+| `contact.tsx`            | Server | Contact section with CTAs                                            |
+| `navigation.tsx`         | Client | Sticky nav with mobile hamburger                                     |
+| `footer.tsx`             | Server | Footer with links                                                    |
+| `ocean-waves.tsx`        | Server | CSS-animated SVG waves (fixed bottom)                                |
+| `client-extras.tsx`      | Client | Lazy wrapper for non-critical JS (dynamic imports, ssr: false)       |
+| `floating-emoji.tsx`     | Client | Decorative emoji scattered along page edges                          |
+| `toast-system.tsx`       | Client | Slide-in toast notifications ("Coffee break", "Claude says hi")      |
+| `cursor-trail.tsx`       | Client | Konami code Easter egg (padel ball cursor trail)                     |
+| `scroll-reveal-init.tsx` | Client | IntersectionObserver for scroll reveal animations                    |
+| `blog/mdx-components.tsx`| Server | Custom MDX component map for blog posts                              |
+| `blog/theme-grid.tsx`    | Server | 3-column theme concept image grid                                    |
+| `blog/lighthouse-comparison.tsx` | Server | Side-by-side Lighthouse score comparison                     |
 
 ### Key Files
+
 - `src/app/layout.tsx` — Root layout, font config, structured data, ASCII console art
 - `src/app/page.tsx` — Single-page layout composing all sections
 - `src/app/globals.css` — Design tokens, animations, wave CSS, scroll reveal
@@ -73,6 +82,7 @@ All sections are Server Components except where JS interactivity is needed:
 Jelte started the entire project by chatting with Claude on his phone. No IDE, no code editor — just a conversation about what his portfolio should look like and say.
 
 **What happened in this phase:**
+
 1. **Positioning & brand strategy** — Through conversation, Jelte and Claude figured out the messaging: "AI-first Frontend Engineer", the 4 differentiators, the confident-but-not-bold tone. Claude helped refine the messaging away from generic freelancer language toward architecture-level positioning.
 2. **Content structure** — Decided on all 9 sections, the order, what goes in each one. The "Now" section, engineering philosophy cards, and competence-grouped tech stack all emerged from back-and-forth.
 3. **Design system** — The tropical Bali theme with ocean/sand/palm colors, Lilita One + Nunito fonts, floating emoji, toast notifications — all designed conversationally.
@@ -80,12 +90,14 @@ Jelte started the entire project by chatting with Claude on his phone. No IDE, n
 5. **Full HTML prototype** — Claude generated a complete single-file `index.html` (~600KB with base64-embedded caricature). This was a working, responsive, interactive prototype with all sections, animations, and Easter eggs.
 
 **What worked well:**
+
 - Starting on mobile forced focus on decisions and content rather than implementation details
 - The conversational approach led to better positioning than sitting in front of a blank IDE
 - Having a complete HTML prototype meant the design was validated before any "real" development
 - Claude was good at iterating on tone and messaging — went through several rounds
 
 **Lessons learned:**
+
 - A 600KB single-file HTML with base64 images is not a good long-term format, but it's great for prototyping
 - Mobile chat is perfect for ideation but limited for code review
 - The prototype served as a detailed spec for the Next.js port
@@ -97,6 +109,7 @@ Jelte started the entire project by chatting with Claude on his phone. No IDE, n
 This is where the handover happened — from a phone conversation to a proper development environment. The `CLAUDE.md` file was the bridge: it contained all the context from the mobile chat sessions (positioning, design system, content structure, component breakdown).
 
 **The port process:**
+
 1. `create-next-app` with Next.js 16 (latest), TypeScript, Tailwind CSS 4
 2. Added shadcn/ui and Base UI for component primitives
 3. Extracted the base64 caricature image to `/public/images/`
@@ -106,12 +119,14 @@ This is where the handover happened — from a phone conversation to a proper de
 7. Made most sections Server Components, with Client Component wrappers only where needed
 
 **What worked well about the handover:**
+
 - The `CLAUDE.md` file gave Claude Code full context — it didn't need to "discover" the project
 - Having a working HTML prototype meant Claude Code could reference specific implementations
 - The component breakdown was already planned in the chat phase
 - Claude Code's ability to read files, run builds, and iterate was a massive speedup
 
 **Key decisions made during port:**
+
 - Used `max-md:contents` CSS trick to reorder hero elements on mobile (h1 above image, text below) without duplicating markup
 - All non-critical client JS (floating emoji, toasts, cursor trail, scroll reveal) loaded via dynamic imports with `ssr: false` through a `ClientExtras` wrapper
 - Used `experimental.inlineCss: true` to eliminate CSS from the critical rendering path
@@ -119,6 +134,7 @@ This is where the handover happened — from a phone conversation to a proper de
 ### Phase 3: Polish & SEO
 
 **What was added:**
+
 - Dynamic OG images with 3 rotating variants (randomized per deploy):
   - Variant A: "Hero Card" — caricature with gradient background
   - Variant B: "Bold Gradient" — large name with tropical gradient
@@ -131,6 +147,7 @@ This is where the handover happened — from a phone conversation to a proper de
 - Career text refinements (updated About and Experience sections)
 
 **OG image debugging saga:**
+
 - The hero caricature was a JPEG file with a `.png` extension
 - Satori (used by `next/og` ImageResponse) silently failed to render it
 - Discovered by checking file magic bytes: `0xFF 0xD8` = JPEG, not PNG
@@ -145,17 +162,20 @@ This is where it got technical and iterative. Started at ~80 mobile Lighthouse, 
 **1. CLS 0.311 — THE main culprit (was destroying the mobile score)**
 
 Root cause: `display: "optional"` on fonts. On Slow 4G (Lighthouse's mobile throttle), the custom fonts (especially Lilita One) couldn't load within the ~100ms block period. The browser would:
+
 - Initially reserve space based on the fallback font metrics
 - Then either commit to fallback or do a late swap
 - The heading font (Lilita One) is chunky and wide — very different from any system font fallback
 - This caused the text block below the hero to shift down/up → 0.311 CLS
 
 **Fix**: Changed both fonts to `display: "swap"` with `adjustFontFallback: true`. This means:
+
 - Text renders immediately with a size-adjusted fallback (Next.js generates `size-adjust`, `ascent-override`, `descent-override` CSS)
 - When the real font loads, the swap is nearly invisible because metrics match
 - CLS went from 0.311 to **0** (zero!)
 
 **What we tried that didn't work for CLS:**
+
 - `display: "optional"` — caused the CLS in the first place
 - `display: "optional"` + `preload: true` — font still didn't load fast enough on Slow 4G
 - Changing hero from `items-center` to `items-start` on mobile — helped slightly but didn't fix root cause
@@ -171,6 +191,7 @@ Root cause: `display: "optional"` on fonts. On Slow 4G (Lighthouse's mobile thro
 - Result: image served as AVIF at ~45KB instead of PNG at ~150KB+
 
 **What we tried that didn't work for image:**
+
 - Resizing source from 1024x1536 to 533x800 — made the image look noticeably smaller on screen. The `sizes` prop controls what's served, not the source dimensions
 - `quality={65}` — silently fell back to `75` because Next.js 16's default `qualities` allowlist is only `[75]`
 
@@ -199,6 +220,7 @@ Root cause: `display: "optional"` on fonts. On Slow 4G (Lighthouse's mobile thro
 - Fix: collapse wrapper to `0px` before measuring
 
 #### What we can't fix (framework overhead)
+
 - **Legacy JavaScript polyfills** — 14KB from Next.js, can't remove without ejecting
 - **Unused JavaScript** — 47KB of Next.js runtime chunks loaded on every page
 - **LCP 2.9s on mobile** — hero image delivery on Slow 4G throttle is the bottleneck; image is already AVIF at q60
@@ -214,10 +236,10 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [560, 640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
-    qualities: [60, 75],  // Must explicitly list allowed quality values in Next.js 16
+    qualities: [60, 75], // Must explicitly list allowed quality values in Next.js 16
   },
   experimental: {
-    inlineCss: true,  // Inlines CSS to eliminate render-blocking stylesheet requests
+    inlineCss: true, // Inlines CSS to eliminate render-blocking stylesheet requests
   },
 }
 ```
@@ -228,8 +250,8 @@ const lilitaOne = Lilita_One({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-lilita-one",
-  display: "swap",           // Render text immediately, swap when font loads
-  adjustFontFallback: true,  // Generate size-matched fallback to minimize CLS
+  display: "swap", // Render text immediately, swap when font loads
+  adjustFontFallback: true, // Generate size-matched fallback to minimize CLS
   preload: true,
 })
 ```
@@ -241,6 +263,7 @@ const lilitaOne = Lilita_One({
 Jelte plans to write a blog post about building this portfolio. Target audience: developers starting with AI dev tools like Claude. The post should both inspire and teach.
 
 ### Suggested structure:
+
 1. **Intro** — Why build a portfolio in 2026, and why with AI?
 2. **Starting on the phone** — How a Claude chat conversation on mobile became the foundation (positioning, design system, content strategy, full HTML prototype)
 3. **The handover to Claude Code** — How CLAUDE.md bridged the gap, benefits of the Claude Project feature for keeping context
@@ -251,6 +274,7 @@ Jelte plans to write a blog post about building this portfolio. Target audience:
 8. **Key takeaways for devs starting with AI tools**
 
 ### Key talking points for the blog:
+
 - AI is great for ideation and content strategy — the mobile chat phase produced better positioning than sitting in front of Figma
 - The handover between tools (Claude chat → Claude Code) needs a bridge document (CLAUDE.md)
 - Performance optimization still requires human intuition — AI can suggest fixes but debugging CLS requires understanding the browser rendering pipeline
@@ -265,6 +289,7 @@ Jelte plans to write a blog post about building this portfolio. Target audience:
 Jelte wants a **confident but not too bold** tone.
 
 ### Current Title & Headline
+
 ```
 AI-first Frontend Engineer
 Building high-performance consumer apps at scale.
@@ -272,12 +297,14 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ```
 
 ### 4 Differentiators
+
 1. **Remote-First Senior** — Dutch engineer in Bali, delivering for European enterprise
 2. **Architecture-Level** — SSR strategy, caching layers, CI/CD, auth — beyond components
 3. **Mobile Modernization** — RN → Expo migrations, EAS workflows, build cost optimization
 4. **AI-Augmented Dev** — Cursor, Claude, Copilot — AI as a core part of the workflow
 
 ### Key Messaging Rules
+
 - **DO**: Emphasize architecture thinking, enterprise scale, AI-augmented workflow
 - **DO**: Mention specific technical decisions (dual-layer caching, Auth0 multi-app, SSR strategy)
 - **DON'T**: Use "passionate developer", "love coding", or generic freelancer language
@@ -288,6 +315,7 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ## Design System — Tropical Theme
 
 ### Color Palette
+
 ```css
 --ocean: #0c8a9e;
 --ocean-deep: #065563;
@@ -302,16 +330,18 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 --wood: #8b6d47;
 --coffee: #3e2723;
 --padel-yellow: #d4e500;
---ai-purple: #8b5cf6;        /* Used for AI-related elements */
+--ai-purple: #8b5cf6; /* Used for AI-related elements */
 --ai-purple-light: #a78bfa;
 ```
 
 ### Typography
+
 - **Headings**: Lilita One (Google Fonts) — chunky, tropical feel
 - **Body**: Nunito (Google Fonts) — warm, rounded sans-serif
 - **Code**: System monospace (`ui-monospace, monospace`) — Fira Code was removed for performance
 
 ### Visual Elements
+
 - **Cards**: frosted glass background, `1.5px` border, `20px` radius, hover lift
 - **AI elements**: Purple accent (`--ai-purple`) for AI-related cards, pills, borders
 - **Floating emoji**: 🌴🥥☕🌺🏝️🏸🌊 scattered along edges, scrolls with page
@@ -326,6 +356,7 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ## Content Sections
 
 ### Sections in order:
+
 1. **Hero** — H1 "AI-first Frontend Engineer", availability badge, CTAs, caricature with toast badges, 4 differentiator cards
 2. **About** — Bio, business analyst background, AI-first workflow, highlight cards
 3. **Tech Stack** — Grouped by competence area (Frontend Architecture, Mobile, AI Tooling, DevOps, Quality)
@@ -341,13 +372,15 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ## Future TODO
 
 ### Next priorities
-- [ ] Blog section (MDX) — starting with the "how I built my portfolio" post
+
+- [x] Blog section (MDX) — first post live at `/blog/how-i-built-my-portfolio`
 - [ ] Theme system (Tropical / Minimal Pro / Cyberpunk)
 - [ ] Contact form (Resend or server action)
 - [ ] Real project screenshots
 - [ ] Dark mode variant
 
 ### Nice to have
+
 - [ ] Page transitions (View Transitions API)
 - [ ] Make "Now" section data-driven (JSON or MDX)
 - [ ] Palm tree edge decorations (illustrated PNGs, not SVG)
@@ -355,8 +388,58 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ---
 
 ## Important Notes
+
 - Company name is **Stellar Web Development**, NOT Jellyhead
 - Jelte's **business analyst** background is intentional — it's why he thinks about product, not just code
 - The AI-augmented development angle is a major differentiator — should be prominent throughout
 - This portfolio was built entirely with AI tools: Claude (chat on phone for ideation) → Claude Code (for implementation)
 - Jelte uses **Cursor** as his IDE
+
+---
+
+## Blog Section (MDX)
+
+### Architecture
+
+- **Content**: MDX files in `src/content/blog/` with gray-matter frontmatter
+- **Rendering**: `next-mdx-remote/rsc` (Server Component rendering, no client JS)
+- **Routes**: `/blog` (listing), `/blog/[slug]` (individual posts via `generateStaticParams`)
+- **Layout**: `src/app/blog/layout.tsx` wraps blog pages with Navigation + Footer
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/lib/blog.ts` | `getAllPosts()`, `getPostBySlug()`, `getReadingTime()` |
+| `src/components/blog/mdx-components.tsx` | Custom MDX component map (headings, links, images) |
+| `src/components/blog/theme-grid.tsx` | 3-column grid for theme concept images |
+| `src/components/blog/lighthouse-comparison.tsx` | Side-by-side mobile/desktop Lighthouse scores |
+| `src/content/blog/how-i-built-my-portfolio.mdx` | First blog post |
+| `public/images/blog/` | Blog images (10 files) |
+
+### Adding a New Blog Post
+
+1. Create `src/content/blog/my-new-post.mdx` with frontmatter:
+   ```yaml
+   ---
+   title: "Post Title"
+   date: "2026-03-01"
+   description: "Meta description"
+   author: "Jelte Homminga"
+   tags: ["tag1", "tag2"]
+   featured: false
+   ---
+   ```
+2. Add images to `public/images/blog/`
+3. The post automatically appears on `/blog` and gets its own page at `/blog/my-new-post`
+
+### Image Handling in MDX
+
+- Standard `![alt](src)` markdown images are mapped to `next/image` via BlogImage component
+- Special cases: `claude-phone.jpg` renders at 33% width centered, `portfolio.png` gets ocean-deep border
+- For grids or side-by-side layouts, use JSX components: `<ThemeGrid />`, `<LighthouseComparison />`
+
+### SEO
+
+- Each post generates: title, meta description, OG tags, canonical URL, BlogPosting structured data
+- Blog listing and all posts are included in `sitemap.xml`

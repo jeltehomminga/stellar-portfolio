@@ -30,8 +30,8 @@ const projects = [
 ]
 
 export const Projects = () => (
-  <section id="projects" className="relative z-[1] bg-sand-warm px-8 py-24 lg:px-12 lg:py-28">
-    <div className="mx-auto max-w-[1440px]">
+  <section id="projects" className="relative bg-sand-warm px-8 py-24 lg:px-12 lg:py-28">
+    <div className="relative z-[5] mx-auto max-w-[1200px]">
       <ScrollReveal>
         <div className="mb-10">
           <div className="font-heading text-[clamp(1.8rem,3.5vw,2.6rem)] text-ocean-deep">
