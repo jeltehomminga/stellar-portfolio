@@ -117,4 +117,5 @@ export const mdxComponents: MDXComponents = {
   img: BlogImage as MDXComponents["img"],
   ThemeGrid,
   LighthouseComparison,
+  Image,
 }
