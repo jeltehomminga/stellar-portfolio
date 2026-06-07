@@ -1,0 +1,128 @@
+---
+title: "Stop Screenshotting Figma — How to Get AI to Build Pixel-Perfect Designs"
+date: "2026-06-07"
+description: "The default Figma MCP workflow hands your AI a blurry screenshot and hopes for the best. Here's how I get the real design values out of Figma, then prove the running app matches them numerically — on mobile with Argent and on web with the browser MCP."
+author: "Jelte Homminga"
+tags: ["ai", "figma", "mcp", "design-to-code", "react-native", "frontend"]
+featured: true
+---
+
+# Stop Screenshotting Figma — How to Get AI to Build Pixel-Perfect Designs
+
+There's a version of "AI builds my design" that everyone has tried by now: you point an AI at a Figma frame, it grabs a screenshot, and it builds something that looks _roughly_ right. The spacing is close. The colors are nearly correct. The font is "a sans-serif." And then you spend the next hour nudging padding by 2px at a time.
+
+The problem isn't the AI. The problem is the input. A screenshot is a picture of a design — it isn't the design. The actual values (the tokens, the exact spacing, the corner radii, the font weights) all live in Figma as structured data, and most workflows throw that away the moment they take a screenshot.
+
+I got tired of the eyeballing loop, so I built a pair of skills around two rules that changed everything: **extract the exact values before writing any code, then verify the running app against those values numerically.** Here's how it works.
+
+## Rule 1: Extract Exact — Before You Write a Single Component
+
+The screenshot is the _last_ thing I look at, not the first. The source of truth is the structured data the Figma MCP can hand you if you ask for the right things:
+
+- `get_variable_defs` → the design tokens (colors, spacing, radii, type scale). This is gold. These map directly to your codebase's tokens.
+- `get_metadata` → exact sizes and positions of every node.
+- `get_design_context` → the structure only. Auto-layout becomes flex direction, gap, and hierarchy. I use this to understand _layout_, never to copy its hardcoded pixel values.
+- `get_screenshot` → a visual reference, and nothing more. I never measure anything off it.
+
+The output of this phase isn't code — it's a **design-spec table**. One row per element, with columns for the property, the exact Figma value, the repo token or class it maps to, and the source component to reuse:
+
+```
+element        | property      | Figma value        | repo token / class           | source component
+---------------|---------------|--------------------|------------------------------|------------------
+CTA button     | background    | var(--primary/500) | bg-primary-500               | <Button />
+CTA button     | corner radius | 12                 | rounded-xl                   | <Button />
+CTA button     | label font    | Inter 16 / 600     | text-base font-semibold      | <Button />
+Card container | background    | var(--shade/0)     | bg-white dark:bg-dark-50     | <Card />
+```
+
+That table is the whole game. It forces a real decision for every property — "this maps to an existing token" or "this is drift I need to flag" — instead of letting the AI approximate. It also means I reuse existing primitives (`<Button />`, `<Card />`) instead of scaffolding new ones that drift from the design system.
+
+One repo-specific note that saves a lot of pain: a Figma variable like `var(--shade/0)` maps to `bg-white dark:bg-dark-neutral-50`, **not** `bg-shade-0`. The token names in Figma and in code don't always line up one-to-one, and the spec table is where you catch that mismatch instead of shipping it.
+
+## Rule 2: Verify Against the Running App — With Numbers, Not Vibes
+
+This is the half everyone skips, and it's the half that actually gets you to pixel-perfect. Building the component is step one. Proving it matches is step two, and "it looks right on my screen" is not proof.
+
+The verification loop has two passes — a visual one and a numeric one — and the shape is the same whether I'm shipping a web page or a mobile screen. Only the tooling differs.
+
+**The visual pass** is a high-resolution screenshot of the running app. The single most important detail: capture at full resolution. On the web that's trivial — the browser MCP (or a Playwright screenshot) gives you a crisp render at device pixel ratio. On mobile, the default capture is often downscaled to roughly a third of native resolution, which is blurry, and a blurry screenshot is exactly the trap we're trying to escape. With Argent that means setting `scale: 1.0` explicitly. This is the most common thing people get wrong.
+
+**The numeric pass** is where the rigor lives. I walk every single row of the spec table and check the _actual rendered value_ against the Figma value — and this is the part that turns "looks close" into "matches, measured":
+
+- On the web, the browser MCP (or Playwright) reads computed styles straight off the DOM. `getComputedStyle` gives you the rendered padding, color, font, and radius in real pixels — the ground truth of what shipped.
+- On iOS, `native-find-views` returns the real `backgroundColor`, `bounds`, `cornerRadius`, and `font` of each view.
+- For React Native components, `debugger-evaluate` reads resolved props, `measure()` output, and computed styles.
+
+Each row gets a PASS or FAIL with the actual delta. "Corner radius: Figma 12, rendered 12 — PASS." "Padding: Figma 16, rendered 14 — FAIL, off by 2." No guessing, no squinting at two images side by side. The AI fixes the FAILs and re-runs, and I cap it at three iterations so it doesn't chase phantom sub-pixel differences forever.
+
+A run looks like this:
+
+```
+✓ CTA button   · corner radius   Figma 12   rendered 12   PASS
+✗ CTA button   · padding-x       Figma 16   rendered 14   FAIL  Δ2
+✓ Card         · background      #FFFFFF    #FFFFFF       PASS
+✗ Heading      · font-weight     600        500          FAIL  Δ100
+```
+
+### A Note on the Mobile Tooling
+
+On web the browser MCP and Playwright are well-trodden ground. Mobile is trickier — you need something that can build, launch, drive, and _inspect_ a simulator or emulator. My tool of choice here is **[Argent](https://argent.swmansion.com/)** by Software Mansion ([GitHub](https://github.com/software-mansion/argent), `npx @swmansion/argent init`). It's the piece that makes this whole loop work on React Native: it controls the simulator like a user would, and — crucially for verification — it can read back the real native view properties so the numeric pass actually has numbers. No telemetry, free, and it plugs into Claude Code, Cursor, and most agents over MCP.
+
+It's not the only option, though. Callstack's [agent-device](https://github.com/callstackincubator/agent-device) is a CLI for driving iOS and Android devices from an agent, and there are lighter iOS-simulator MCP servers floating around too. The principle doesn't depend on the brand — you just need a tool that can both _drive_ the device and _report rendered values back_. Argent happens to do both really well, which is why I keep reaching for it.
+
+**Takeaway:** the screenshot is a sanity check; the numbers are the spec. When the AI can read the rendered values back, "looks close" becomes "matches, measured" — and the gap between those two is where all the manual nudging used to live.
+
+## Make the Verification Repeatable
+
+The first time you verify a screen, you're tapping through navigation to get to it. Don't do that by hand every time. I record the navigation as an Argent flow so each re-verify is byte-for-byte identical — same starting state, same path, same screenshot. That matters because when you change one padding value and re-run, you want to be certain nothing else moved. On web, the same idea is a short Playwright script that navigates and snapshots.
+
+## When Figma and Code Disagree
+
+Sometimes the rendered value is "wrong" but the code is right — the Figma file itself has drifted from the design system tokens. When that happens, I don't hardcode the Figma value to force a PASS. I log the mismatch (I keep a `figma-token-drift.md` for exactly this) and use the correct token. Pixel-perfect to a _stale_ design is just a different kind of wrong.
+
+## Why This Generalizes
+
+The mobile-versus-web details change — Argent and `native-find-views` on one side, the browser MCP and `getComputedStyle` on the other — but the shape is identical everywhere:
+
+1. Pull structured values out of the design, not pixels off a picture.
+2. Map every value to a real token or component in your codebase.
+3. Render the thing, read the rendered values back, and diff them against the spec.
+4. Make that loop repeatable so re-checking costs nothing.
+
+## Get the Skills
+
+I packaged these two rules as two open-source skills, so the workflow is one install instead of a doc you reimplement each time:
+
+- **`figma-design-extract`** reads exact Figma values (tokens, sizes, structure) via the Figma MCP into a build-ready design-spec table, instead of eyeballing a screenshot.
+- **`design-fidelity-verify`** measures the running web or mobile app against that spec in a bounded vision+numeric loop (PASS/FAIL plus a delta per row), instead of "looks done."
+
+Both live in one repo — **[github.com/jeltehomminga/figma-design-skills](https://github.com/jeltehomminga/figma-design-skills)** (MIT).
+
+In Claude Code, add the marketplace and install:
+
+```
+/plugin marketplace add jeltehomminga/figma-design-skills
+/plugin install figma-design-skills@figma-design-skills
+```
+
+In any other agent — Cursor, Codex, Copilot, Windsurf, Gemini — it's one command:
+
+```
+npx skills add jeltehomminga/figma-design-skills
+```
+
+If this saved you an afternoon of nudging padding 2px at a time, a [GitHub star](https://github.com/jeltehomminga/figma-design-skills) helps other people find it. That's the whole ask.
+
+### Write the Skill Once, Use It Everywhere
+
+The thing I didn't expect when I shipped these: I never had to reformat them per tool. A skill is just a `skills/<name>/SKILL.md` file, and the [Open Plugins](https://open-plugins.com) standard means the same file is picked up everywhere. [cursor.directory](https://cursor.directory) and GitHub's [awesome-copilot](https://github.com/github/awesome-copilot) both ingest the exact same files with zero per-tool changes, and [skills.sh](https://skills.sh) installs them into Claude Code, Cursor, Codex, Copilot, Windsurf, Gemini, or Cline with one `npx skills add`. Write the skill once; it runs wherever you work.
+
+## The Bottom Line
+
+AI is genuinely good at the middle part — translating a spec table into components and grinding through a list of FAILs. What it can't do is invent the ground truth. If you feed it a blurry screenshot, it produces a blurry approximation. If you feed it exact values and give it a way to measure its own output, it gets you to pixel-perfect and _proves_ it did.
+
+The screenshot was never the design. Stop building from it.
+
+---
+
+_Jelte Homminga is an AI-first Frontend Engineer at [Stellar Web Development](https://stellar-web.dev), building enterprise-grade web and mobile apps from Bali. Connect on [LinkedIn](https://linkedin.com/in/jeltehomminga) or check out his work on [GitHub](https://github.com/jeltehomminga)._

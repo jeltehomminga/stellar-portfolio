@@ -104,6 +104,12 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
+  pre: (props) => (
+    <pre
+      className="my-6 overflow-x-auto rounded-xl bg-ocean-deep p-4 text-sm leading-relaxed text-sand [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-inherit [&>code]:text-sm"
+      {...props}
+    />
+  ),
   ul: (props) => <ul className="mb-5 ml-6 list-disc space-y-1" {...props} />,
   ol: (props) => <ol className="mb-5 ml-6 list-decimal space-y-1" {...props} />,
   li: (props) => <li className="leading-relaxed text-text-dark" {...props} />,
