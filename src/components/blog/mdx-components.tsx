@@ -1,5 +1,6 @@
 import Image from "next/image"
 import type { MDXComponents } from "mdx/types"
+import { cn } from "@/lib/utils"
 import { ThemeGrid } from "./theme-grid"
 import { LighthouseComparison } from "./lighthouse-comparison"
 
@@ -101,6 +102,15 @@ export const mdxComponents: MDXComponents = {
   code: (props) => (
     <code
       className="font-mono bg-sand-warm px-1.5 py-0.5 rounded text-ai-purple text-sm"
+      {...props}
+    />
+  ),
+  pre: ({ className, ...props }) => (
+    <pre
+      className={cn(
+        "my-6 overflow-x-auto rounded-xl bg-ocean-deep p-4 text-sm leading-relaxed text-sand [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-inherit [&>code]:text-sm",
+        className,
+      )}
       {...props}
     />
   ),
