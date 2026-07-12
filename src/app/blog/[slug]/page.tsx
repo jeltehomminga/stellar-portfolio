@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
+import remarkGfm from "remark-gfm"
 import remarkUnwrapImages from "remark-unwrap-images"
 import { getAllPosts, getPostBySlug, getReadingTime } from "@/lib/blog"
 import { mdxComponents } from "@/components/blog/mdx-components"
@@ -117,7 +118,9 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
             <MDXRemote
               source={post.content}
               components={mdxComponents}
-              options={{ mdxOptions: { remarkPlugins: [remarkUnwrapImages] } }}
+              options={{
+                mdxOptions: { remarkPlugins: [remarkGfm, remarkUnwrapImages] },
+              }}
             />
           </div>
         </div>
