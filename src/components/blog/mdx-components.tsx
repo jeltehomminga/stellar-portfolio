@@ -124,6 +124,24 @@ export const mdxComponents: MDXComponents = {
     />
   ),
   hr: () => <hr className="my-10 border-t-2 border-sand-warm" />,
+  table: (props) => (
+    <div className="my-6 overflow-x-auto">
+      <table className="w-full border-collapse text-sm" {...props} />
+    </div>
+  ),
+  thead: (props) => <thead className="bg-sand-warm" {...props} />,
+  th: (props) => (
+    <th
+      className="border-b-2 border-sand-warm px-3 py-2 text-left font-bold text-ocean-deep"
+      {...props}
+    />
+  ),
+  td: (props) => (
+    <td
+      className="border-b border-sand-warm px-3 py-2 align-top leading-relaxed text-text-dark"
+      {...props}
+    />
+  ),
   img: BlogImage as MDXComponents["img"],
   ThemeGrid,
   LighthouseComparison,

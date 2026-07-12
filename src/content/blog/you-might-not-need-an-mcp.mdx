@@ -1,0 +1,209 @@
+---
+title: "You Might Not Need an MCP"
+date: "2026-07-12"
+description: "MCP servers are great — and you're probably running too many of them. How I drive Bitbucket PRs with plain curl, why I removed an MCP that already existed, and a simple framework for choosing between REST, CLI, and MCP."
+author: "Jelte Homminga"
+tags: ["ai", "mcp", "claude", "rest", "cli", "developer-tools"]
+featured: false
+---
+
+# You Might Not Need an MCP
+
+There's a pattern in frontend history that keeps repeating. A genuinely useful tool arrives, the ecosystem sprints toward it, and some years later someone writes the sober follow-up: [You Might Not Need jQuery](https://youmightnotneedjquery.com/). [You Might Not Need Redux](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367). [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect). None of those posts said the tool was bad. They said the tool has a price, and a lot of people were paying it for nothing.
+
+I think we're at that point with MCP servers.
+
+## What an MCP Actually Buys You
+
+Let's start where Dan Abramov started with Redux: the tool is good, and the hype exists for a reason.
+
+The Model Context Protocol gives your AI assistant a standard way to talk to external systems. Concretely, that buys you:
+
+- **A protocol, not a pile of glue code.** One standard for tool discovery, invocation, and results — every agent that speaks MCP can use every server that speaks MCP.
+- **Typed tools.** The model knows exactly what parameters `search_issues` takes, so it doesn't have to guess at an API shape.
+- **Managed auth.** OAuth flows, token refresh, session state — handled by the server, invisible to the model.
+- **It can hold things open.** A connection, a session, a browser instance — things a one-shot shell command can't.
+
+These are real benefits. I use MCP servers daily and two of them appear later in this post as "absolutely the right call."
+
+But MCP asks you to accept trade-offs in return:
+
+- **Every active server's tool descriptions ride along in your context on every single turn.** Not when you use them — always. Six always-on servers were the single biggest per-turn input cost in my setup, bigger than all my instruction files combined. That's context you're not spending on your actual code, and on a subscription plan it translates directly into rate-limit headroom and how long a session survives.
+- **It's another process.** Something to install, authenticate, update, and debug when it silently stops working.
+- **It sits between the model and the truth.** When a call fails, the model sees the server's version of the error, not the error itself.
+
+So the Redux rule applies: if you don't need what it buys, don't pay what it costs. Here are two real cases from my daily work where the answer was "don't pay" — and two where the MCP earned its keep.
+
+## Still No MCP? Give It a REST
+
+Bitbucket Cloud — where my client's entire codebase lives — still has no official MCP server. For a while that felt like a gap. It turned out to be a feature, because the replacement is embarrassingly simple: **a markdown file that teaches the agent the REST API, and `curl`.**
+
+The whole "integration" is a skill file — a plain document the agent reads when it needs to work with PRs. It documents the endpoints, the auth, and the gotchas. There is no server. There is nothing to install. The agent already knows how to run `curl`; it just needs to know which URLs matter.
+
+Auth is one file, `~/.netrc`:
+
+```
+machine api.bitbucket.org
+  login you@yourcompany.com
+  password <scoped-api-token>
+```
+
+The token is an Atlassian **scoped** API token (id.atlassian.com → "Create API token with scopes" → app: Bitbucket). Two things will save you an hour here: app passwords can't be created anymore since mid-2026, and classic unscoped tokens get rejected with `API Token provided has no Bitbucket scopes`. For the full PR lifecycle you need five scopes: `read:user:bitbucket`, `read:repository:bitbucket`, `write:repository:bitbucket`, `read:pullrequest:bitbucket`, `write:pullrequest:bitbucket`.
+
+With that in place, every call is `curl -sL --netrc` — the token never appears in a command, so it never appears in your agent's context or logs either. PR status:
+
+```bash
+REPO=myorg/myrepo
+curl -sL --netrc "https://api.bitbucket.org/2.0/repositories/$REPO/pullrequests/42" \
+  | jq '{state, comments: .comment_count, open_tasks: .properties.openTaskCount}'
+```
+
+Staging a review comment as a draft — the same thing Bitbucket's "Start review" button does:
+
+```bash
+curl -sL --netrc -X POST -H "Content-Type: application/json" \
+  "https://api.bitbucket.org/2.0/repositories/$REPO/pullrequests/42/comments" \
+  -d '{"content": {"raw": "Consider extracting this into a shared hook."}, "pending": true}'
+```
+
+That `pending: true` flag deserves a pause, because it's my favorite argument for going straight to the API. It stages every comment as a draft, so the agent can write an entire review and I read it in Bitbucket's UI and hit "Finish review" myself — nothing gets published under my name until I say so. A human-in-the-loop guardrail, expressed as one JSON field.
+
+And it's exactly the kind of feature that goes missing when an API gets wrapped. A wrapper — MCP server or otherwise — ships the tools its author decided to build, and a small-but-killer flag like `pending` usually doesn't make the cut. A `post_comment` tool that takes `text` and `file` ships in version one; the draft flag doesn't. When the agent talks to the API directly, there's nothing in between: if the platform can do it, the agent can do it — the day you find a feature in the docs, it's already available.
+
+The rest of the lifecycle is the same shape — reading the diff, listing changed files, setting reviewers, approving, merging. One endpoint each.
+
+And here's the part I didn't expect: working at the REST level made the agent *better* at debugging, not worse. Example: Bitbucket's `/diff` endpoint doesn't return the diff. It returns an HTTP 302 redirect to an S3 URL, and if you forget `-L`, you get an empty body and a confusing `jq` parse error. An MCP server would hide that behind a `get_diff` tool — which is great until the day it breaks and neither you nor the agent can see why. With raw HTTP, the agent hit the empty body, looked at the response headers, saw the redirect, and fixed its own command. The failure mode was *visible*.
+
+That's the general argument for REST-when-it's-simple: the agent sees ground truth. And as a bonus, you actually learn the API of a tool you use every day — knowledge that transfers to every script, every CI job, every teammate's question.
+
+## You Might Not Need an MCP Even When One Exists
+
+The Bitbucket case is easy — there's no MCP, so the decision is made for you. Azure DevOps is the more interesting case, because an official MCP server *exists* for it, I ran it, and I removed it on purpose.
+
+My use case: our CI pipelines run in Azure DevOps. When a pipeline goes red, I want the agent to find out why. The MCP server does cover builds. So why take it out? Three reasons, and I want to be precise about them, because "CLI over MCP" sounds like a preference until you see the actual accounting.
+
+**1. The auth already existed.** The `az` CLI is authenticated through my normal `az login` SSO session. The MCP path would mean a second credential to create, store, rotate, and potentially leak — for access I already had. When a CLI on your machine is already logged in as you, an MCP server isn't adding a capability. It's adding a second door to the same building.
+
+**2. The CLI can do more, not less.** Anything the `azure-devops` extension wraps is a first-class command. Anything it doesn't wrap is reachable with `az devops invoke`, which can hit the *entire* ADO REST API — every area, every resource — under that same login. The MCP server gives you the tools someone picked for you; the CLI gives you everything.
+
+**3. The MCP was mostly dead weight for me.** The server ships tools across five domains: builds, repos, pull requests, work items, wikis. In my setup, four of those are pointless — source lives on Bitbucket, issues live in Jira. But the tool descriptions for all of them were sitting in my context on every turn of every session. Paying per-turn for tools that will never be called is exactly the trade-off Abramov warned about, wearing a trench coat.
+
+Here's what the replacement looks like in practice. Three commands from "the pipeline failed" to the exact offending line:
+
+```bash
+ORG=https://dev.azure.com/myorg; P=my-web-app
+
+# 1. Find the failed run
+az pipelines runs list --org $ORG -p "$P" --pipeline-ids 421 --top 5 -o json \
+  | jq -r '.[] | select(.result=="failed") | "\(.id)\t\(.finishTime)"' | head -1
+
+# 2. Timeline → which task failed, and its log id
+az devops invoke --org $ORG --area build --resource timeline \
+  --route-parameters project="$P" buildId=163422 --api-version 7.1 -o json \
+  | jq -r '.records[] | select(.result=="failed" and .type=="Task") | "TASK: \(.name)  logId=\(.log.id)"'
+
+# 3. Pull that task's log and grep the real error
+az devops invoke --org $ORG --area build --resource logs \
+  --route-parameters project="$P" buildId=163422 logId=60 --api-version 7.1 --encoding utf-8 \
+  | jq -r '.value[]' | grep -nE '##\[error\]|error TS[0-9]+' | head
+```
+
+Real run: step 2 says the type-check task failed, step 3 says `error TS2353` in a couple of spec files. Done. No PAT, no server process, no tool descriptions eating context in every other conversation I have that day.
+
+## When an MCP Is Exactly the Right Call
+
+If I stopped here I'd only be telling half the story — and the original "You Might Not Need" posts never did that. Two integrations in my setup kept their MCP servers, and they show *why* the protocol exists.
+
+**Azure Monitor (Application Insights).** Production monitoring means running KQL — a real query language — against Log Analytics workspaces, with structured parameters (subscription, workspace, table, time range) and large structured result sets coming back. Hand-rolling that over REST would mean rebuilding a query client inside curl commands: escaping multi-line KQL, paginating results, mapping workspace IDs. The MCP server *is* the query client. That's not five fixed endpoints; that's a full query engine, and a full query engine deserves a real client.
+
+**Figma.** A design file is a big stateful tree that you navigate, query, and extract structured values from — tokens, node metadata, layout structure. I wrote a whole post about [building pixel-perfect UI from Figma's structured data](/blog/figma-pixel-perfect-with-ai), and none of it would work over loose REST calls. Rich, stateful, two-way connections like that are what MCP was designed for.
+
+The pattern: **MCP earns its context cost when it wraps a query engine, a long-lived session, or a service whose only door is OAuth.** It doesn't earn it when it wraps five REST verbs you could list on an index card.
+
+## Security Is Part of the Choice
+
+Whichever channel you pick, you're handing an AI agent real access under your name. So ask the same two questions for every integration: what's the worst thing this access could do, and what stands between the agent and that?
+
+**With REST, the token sets the limit.** The Bitbucket token above has exactly five scopes — it can read and write repos and pull requests, and nothing else. No account settings, no user management. If the agent goes off the rails, the damage is capped at what the token allows. And because every call goes through `--netrc`, the token never appears in a command — so it never lands in the agent's context, your shell history, or a log file. One habit on top: irreversible calls stay behind a human. The `pending` flag is one version of that; my other rule is that the agent never calls the merge endpoint — I click that button myself.
+
+**With a CLI, there's often no stored token at all.** My `az` access comes from an SSO login: short-lived tokens, refreshed automatically, revocable by the company in one place, MFA included. That's a better story than any long-lived token sitting in a dotfile. The flip side: the CLI is logged in as *you*, so everything you can do, the agent can do. Here the agent's own permission prompts are the gate — leave them on for anything that writes.
+
+**With an MCP server, the filter cuts both ways.** Earlier I complained that wrappers drop useful flags. Fair is fair: the same filter can also be a safety feature. A well-built server can ship *only* safe tools — read this, comment that — and keep dangerous operations out of the agent's reach entirely, while handling OAuth so no token ever touches the model. But you're also running someone else's code with your credentials. `npx -y some-server@latest` pulls whatever the latest version is, every time — whoever controls that package controls code running on your machine. And the tool descriptions a server sends are text your model reads and trusts, so a bad server can hide instructions in them. The defense is boring: official servers, pinned versions, scoped per project, and read the tool list before you install.
+
+And one risk no channel fixes: everything the agent *reads* is untrusted input. A PR description, an issue comment, a pipeline log — any of it can contain text written to steer your agent (this is prompt injection, and it works the same over REST, CLI, and MCP). The practical rule that follows: let reading be broad, but keep anything that writes, merges, or deletes behind a human click.
+
+## The Framework
+
+When the agent needs to talk to an external system, walk down this list and stop at the first match:
+
+| The situation | Use | Why |
+|---|---|---|
+| A handful of fixed REST endpoints, token auth | A skill file + `curl` | Zero standing cost, the full API (not someone's selection), agent sees raw HTTP |
+| An authenticated CLI already on your machine | The CLI | Auth already solved; often a superset of any MCP's tools |
+| A real query language, stateful sessions, or OAuth-only SaaS | An MCP server | This is the complexity the protocol exists to absorb |
+
+And whichever way you go, two rules keep the costs honest:
+
+- **One channel per integration.** If Bitbucket is curl, it's *only* curl — no MCP and a CLI and a browser tool all overlapping, each eating context for the same thing.
+- **Scope MCP servers to the repos that use them.** Register them per-project, never globally. My non-work sessions load zero work servers; a session only pays for the tools it can actually use.
+
+The trade-offs, if you want to score a specific case: context cost per turn, auth (a new credential vs. one you already have), debugging (raw errors vs. wrapped ones), API coverage (a selection vs. everything), maintenance (a markdown file vs. a running process), and security (how much the access could do in the worst case, and what stands between the agent and that).
+
+### Or Just Ask the Agent
+
+The nice thing about this decision is that your AI assistant can do the investigation itself. Next time you're about to install an MCP server, paste this first:
+
+```
+I want to connect you to <SERVICE> for <USE CASE, e.g.
+"reading and commenting on pull requests">. Before we
+install anything, investigate the options and recommend
+one:
+
+1. CLI — Is there an official CLI for <SERVICE> on this
+   machine, or trivially installable? Is it already
+   authenticated (verify with a harmless read-only
+   command)? If yes, list the exact commands that cover
+   my use case.
+
+2. REST — Does <SERVICE> have a documented REST API?
+   List the specific endpoints my use case needs. If
+   it's a handful of fixed endpoints with token auth,
+   sketch the curl commands and say where the token
+   should live (netrc, keychain — never plaintext in
+   a repo).
+
+3. MCP — Does an official or well-maintained MCP server
+   exist? List every tool it ships and mark which ones
+   my use case would actually call. Count the tools I'd
+   pay for in context on every turn but never use. What
+   auth does it need, and does that duplicate a
+   credential I already have?
+
+4. Security — For each option: what is the least amount
+   of access it needs (token scopes, read-only)? Which
+   operations are irreversible (merge, delete, publish)?
+   Flag those — they stay behind my confirmation no
+   matter which channel we pick.
+
+Then recommend ONE channel — CLI, REST + a skill file,
+or MCP — using this rule: the dumbest transport that
+covers the use case wins. Score it on: context cost per
+turn, auth, API coverage, debugging, maintenance, and
+security. If you recommend the MCP, tell me how to
+scope it to only the projects that need it instead of
+globally.
+
+Report first. Don't install or configure anything yet.
+```
+
+The agent ends up making this post's argument about your specific case — with your machine's actual CLIs, your existing credentials, and the real tool list of the MCP in question in front of it. Half the time the answer is "you already have an authenticated CLI for this."
+
+## The Bottom Line
+
+The MCP ecosystem is growing fast, and the default reflex — "I need my agent to talk to X, let me find an MCP for X" — is often the wrong first move. The right first move is the boring question: *what's the dumbest transport that works?* Sometimes it's four curl commands in a markdown file. Sometimes it's a CLI you authenticated months ago. And sometimes it genuinely is an MCP server — at which point you install it, scope it, and it's worth every token.
+
+You might not need an MCP. But now you know how to tell.
+
+---
+
+_Jelte Homminga is an AI-first Frontend Engineer at [Stellar Web Development](https://stellar-web.dev), building enterprise-grade web and mobile apps from Bali. Connect on [LinkedIn](https://linkedin.com/in/jeltehomminga) or check out his work on [GitHub](https://github.com/jeltehomminga)._
