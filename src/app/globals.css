@@ -1,374 +1,223 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 
 @source "../content/blog/*.mdx";
 
-@custom-variant dark (&:is(.dark *));
-
+/* ------------------------------------------------------------------
+   Tokens — see DESIGN.md. Light is the default; dark follows the OS.
+   ------------------------------------------------------------------ */
 :root {
-  --radius: 20px;
+  color-scheme: light dark;
 
-  /* Tropical palette */
-  --ocean: #0c8a9e;
-  --ocean-deep: #065563;
-  --ocean-light: #17c1e8;
-  --sand: #faf3e0;
-  --sand-warm: #f5edd5;
-  --palm: #3a9d5e;
-  --palm-dark: #1f6b38;
-  --sunset: #ff6b35;
-  --sunset-glow: #ffa06b;
-  --lava: #e63946;
-  --wood: #8b6d47;
-  --wood-dark: #5c4033;
-  --coffee: #3e2723;
-  --padel-yellow: #d4e500;
-  --ai-purple: #8b5cf6;
-  --ai-purple-light: #a78bfa;
-  --text-dark: #2c1810;
-  --text-mid: #5c4033;
+  --paper: #faf9f6;
+  --paper-raised: #f2f0eb;
+  --ink: #1c1b19;
+  --ink-muted: #63605a;
+  --ink-faint: #74706a;
+  --rule: #e4e1da;
+  --accent: #065563;
+  --accent-ink: #ffffff;
+}
 
-  /* shadcn semantic tokens mapped to tropical */
-  --background: var(--sand);
-  --foreground: var(--text-dark);
-  --card: rgba(255, 253, 248, 0.9);
-  --card-foreground: var(--text-dark);
-  --popover: var(--sand);
-  --popover-foreground: var(--text-dark);
-  --primary: var(--ocean);
-  --primary-foreground: #ffffff;
-  --secondary: var(--sand-warm);
-  --secondary-foreground: var(--ocean-deep);
-  --muted: var(--sand-warm);
-  --muted-foreground: var(--text-mid);
-  --accent: var(--ocean-light);
-  --accent-foreground: var(--ocean-deep);
-  --destructive: var(--lava);
-  --border: rgba(12, 138, 158, 0.1);
-  --input: rgba(12, 138, 158, 0.1);
-  --ring: var(--ocean);
-
-  /* Chart colors */
-  --chart-1: var(--ocean);
-  --chart-2: var(--palm);
-  --chart-3: var(--sunset);
-  --chart-4: var(--ai-purple);
-  --chart-5: var(--lava);
-
-  /* Sidebar (unused for now but required by shadcn) */
-  --sidebar: var(--sand);
-  --sidebar-foreground: var(--text-dark);
-  --sidebar-primary: var(--ocean);
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--sand-warm);
-  --sidebar-accent-foreground: var(--ocean-deep);
-  --sidebar-border: rgba(12, 138, 158, 0.1);
-  --sidebar-ring: var(--ocean);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #141516;
+    --paper-raised: #1c1d1f;
+    --ink: #ecebe7;
+    --ink-muted: #a3a09a;
+    --ink-faint: #7f7c76;
+    --rule: #2a2b2c;
+    --accent: #7cc0ca;
+    --accent-ink: #141516;
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-accent-ink: var(--accent-ink);
 
-  /* Tropical custom colors */
-  --color-ocean: var(--ocean);
-  --color-ocean-deep: var(--ocean-deep);
-  --color-ocean-light: var(--ocean-light);
-  --color-sand: var(--sand);
-  --color-sand-warm: var(--sand-warm);
-  --color-palm: var(--palm);
-  --color-palm-dark: var(--palm-dark);
-  --color-sunset: var(--sunset);
-  --color-sunset-glow: var(--sunset-glow);
-  --color-lava: var(--lava);
-  --color-wood: var(--wood);
-  --color-wood-dark: var(--wood-dark);
-  --color-coffee: var(--coffee);
-  --color-padel-yellow: var(--padel-yellow);
-  --color-ai-purple: var(--ai-purple);
-  --color-ai-purple-light: var(--ai-purple-light);
-  --color-text-dark: var(--text-dark);
-  --color-text-mid: var(--text-mid);
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-  /* Fonts */
-  --font-heading: var(--font-lilita-one);
-  --font-sans: var(--font-nunito);
-  --font-mono: ui-monospace, monospace;
+  --radius: 6px;
 
-  /* Sidebar tokens (required by shadcn) */
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-
-  /* Radius tokens */
-  --radius-sm: calc(var(--radius) - 8px);
-  --radius-md: calc(var(--radius) - 4px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  /* Type scale (DESIGN.md §2) */
+  --text-display: clamp(2.125rem, 1.6rem + 2.4vw, 2.75rem);
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-title: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
+  --text-title--line-height: 1.2;
+  --text-title--letter-spacing: -0.02em;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 1.25;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.4;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-prose: 1.1875rem;
+  --text-prose--line-height: 1.7;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  html {
+    background: var(--paper);
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    background-image: radial-gradient(
-        ellipse at 10% 20%,
-        rgba(58, 157, 94, 0.04) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse at 90% 15%,
-        rgba(58, 157, 94, 0.03) 0%,
-        transparent 45%
-      ),
-      radial-gradient(
-        ellipse at 50% 80%,
-        rgba(12, 138, 158, 0.03) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse at 15% 85%,
-        rgba(139, 109, 71, 0.03) 0%,
-        transparent 40%
-      ),
-      radial-gradient(
-        ellipse at 85% 75%,
-        rgba(58, 157, 94, 0.03) 0%,
-        transparent 40%
-      );
-    overflow-x: hidden;
+    @apply bg-paper font-sans text-body text-ink antialiased;
+    font-optical-sizing: auto;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
   }
   ::selection {
-    @apply bg-ocean text-white;
+    background: var(--accent);
+    color: var(--accent-ink);
   }
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
   }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 7px;
-}
-::-webkit-scrollbar-track {
-  background: var(--sand-warm);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--ocean);
-  border-radius: 10px;
-}
-
-/* Ocean waves */
-.ocean-bg {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  z-index: 0;
-  pointer-events: none;
-}
-.wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 200%;
-  height: 100%;
-  background-repeat: repeat-x;
-  will-change: transform;
-}
-.wave:nth-child(1) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,40 C200,10 400,70 600,40 C800,10 1000,70 1200,40 L1200,80 L0,80Z' fill='%230c8a9e' opacity='.45'/%3E%3C/svg%3E");
-  background-size: 1200px 80px;
-  animation: waveX 7s linear infinite;
-}
-.wave:nth-child(2) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,55 C200,28 400,72 600,50 C800,25 1000,75 1200,55 L1200,80 L0,80Z' fill='%2317c1e8' opacity='.3'/%3E%3C/svg%3E");
-  background-size: 1200px 80px;
-  animation: waveX 11s linear infinite reverse;
-}
-.wave:nth-child(3) {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 80'%3E%3Cpath d='M0,65 C200,48 400,78 600,62 C800,46 1000,76 1200,65 L1200,80 L0,80Z' fill='%23065563' opacity='.55'/%3E%3C/svg%3E");
-  background-size: 1200px 80px;
-  animation: waveX 15s linear infinite;
-}
-@keyframes waveX {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
+  a {
+    transition:
+      color 150ms ease-out,
+      text-decoration-color 150ms ease-out,
+      text-decoration-thickness 150ms ease-out;
   }
 }
 
-/* Reduce wave animation on mobile to save GPU */
-@media (max-width: 768px) {
-  .ocean-bg {
-    height: 50px;
+@layer components {
+  /* Inline link: accent, underlined, thicker underline on hover */
+  .link {
+    color: var(--accent);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
   }
-  .wave {
-    will-change: auto;
+  .link:hover {
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--accent);
+  }
+
+  /* Quiet link: ink-muted, underline only on hover */
+  .link-quiet {
+    color: var(--ink-muted);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: transparent;
+  }
+  .link-quiet:hover,
+  .link-quiet[aria-current="page"] {
+    color: var(--ink);
+  }
+  .link-quiet:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Respect reduced motion preference */
+/* One page-load moment: the hero fades in (opacity only, no layout shift). */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.hero-fade {
+  animation: fade-in 400ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .wave,
-  .animate-fade-up,
-  .animate-fade-up-1,
-  .animate-fade-up-2,
-  .animate-fade-up-3,
-  .animate-fade-up-4,
-  .animate-fade-up-5,
-  .animate-fade-up-6,
-  .reveal {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* Hero fade up animation — opacity-only to prevent CLS */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* ------------------------------------------------------------------
+   Code blocks — rehype-pretty-code (Shiki) with light/dark themes
+   ------------------------------------------------------------------ */
+figure[data-rehype-pretty-code-figure] {
+  margin: 1.75rem 0;
 }
-
-/* Full fade-up with transform — safe for below-the-fold content */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+pre[data-language] {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper-raised) !important;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
-
-.animate-fade-up {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+pre[data-language] > code {
+  display: grid;
+  font-family: var(--font-mono);
 }
-.animate-fade-up-1 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+pre[data-language] [data-line] {
+  padding: 0 1rem;
 }
-.animate-fade-up-2 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.16s forwards;
+pre[data-language] span {
+  color: var(--shiki-light);
 }
-.animate-fade-up-3 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.24s forwards;
-}
-.animate-fade-up-4 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.32s forwards;
-}
-.animate-fade-up-5 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.42s forwards;
-}
-.animate-fade-up-6 {
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
-}
-
-/* Floater animation */
-@keyframes floatY {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  33% {
-    transform: translate(12px, -18px) rotate(3deg);
-  }
-  66% {
-    transform: translate(-8px, 10px) rotate(-2deg);
+@media (prefers-color-scheme: dark) {
+  pre[data-language] span {
+    color: var(--shiki-dark);
   }
 }
 
-/* Toast bob animation */
-@keyframes toastBob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-/* Hero badge blink */
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.35;
-    transform: scale(1.5);
-  }
-}
-
-/* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(22px);
-  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Cursor trail */
+/* Konami easter egg: padel-ball cursor trail (hidden until triggered) */
 .cursor-trail {
   position: fixed;
   width: 10px;
   height: 10px;
-  background: var(--padel-yellow);
+  background: #d4e500;
   border-radius: 50%;
   pointer-events: none;
   z-index: 999;
   opacity: 0;
   transition: opacity 0.3s;
-  box-shadow: 0 0 6px rgba(212, 229, 0, 0.4);
 }
 body.trail-active .cursor-trail {
-  opacity: 0.6;
+  opacity: 0.7;
+}
+
+/* A few Shiki GitHub token colours miss AA on --paper-raised. Shiki sets the
+   variables inline, so override the resolved colour rather than the variable. */
+pre[data-language] span[style*="--shiki-light:#6A737D"] {
+  color: #5f6670;
+}
+pre[data-language] span[style*="--shiki-light:#D73A49"] {
+  color: #b8323f;
+}
+@media (prefers-color-scheme: dark) {
+  pre[data-language] span[style*="--shiki-dark:#768390"] {
+    color: #8a95a2;
+  }
 }

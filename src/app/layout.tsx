@@ -1,56 +1,54 @@
-import type { Metadata } from "next"
-import { Lilita_One, Nunito } from "next/font/google"
+import type { Metadata, Viewport } from "next"
+import { Schibsted_Grotesk } from "next/font/google"
 import "./globals.css"
-import { OceanWaves } from "@/components/ocean-waves"
 import { ClientExtras } from "@/components/client-extras"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-const lilitaOne = Lilita_One({
-  weight: "400",
+const schibsted = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-lilita-one",
+  variable: "--font-schibsted",
   display: "swap",
   adjustFontFallback: true,
   preload: true,
 })
 
-const nunito = Nunito({
-  subsets: ["latin"],
-  variable: "--font-nunito",
-  display: "swap",
-  adjustFontFallback: true,
-  preload: true,
-})
+const title = "Jelte Homminga, Senior Frontend & Mobile Engineer"
+const description =
+  "Freelance senior frontend and mobile engineer: Next.js, React Native and Expo, with an AI-first workflow. Core contributor to My Luminus, Product of the Year 2026."
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://stellar-web.dev"),
-  title: "Jelte Homminga — AI-first Frontend Engineer · Bali",
-  description:
-    "AI-first Frontend Engineer. Building high-performance consumer apps at scale with React, Next.js & Expo. Based in Bali, shipping for European enterprise.",
+  title,
+  description,
   openGraph: {
-    title: "Jelte Homminga — AI-first Frontend Engineer",
-    description:
-      "Building high-performance consumer apps at scale with React, Next.js & Expo. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
+    title,
+    description,
     type: "website",
     url: "https://stellar-web.dev",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jelte Homminga — AI-first Frontend Engineer",
-    description:
-      "Building high-performance consumer apps at scale. AI-augmented development with Cursor & Claude. Based in Bali, shipping for European enterprise.",
+    title,
+    description,
   },
   alternates: {
     canonical: "https://stellar-web.dev",
   },
 }
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf9f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#141516" },
+  ],
+}
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Jelte Homminga",
-  jobTitle: "AI-first Frontend Engineer",
+  jobTitle: "Senior Frontend & Mobile Engineer",
   url: "https://stellar-web.dev",
   sameAs: [
     "https://github.com/jeltehomminga",
@@ -67,7 +65,8 @@ const jsonLd = {
     "React Native",
     "Expo",
     "TypeScript",
-    "AI-augmented development",
+    "Web performance",
+    "Accessibility",
   ],
   address: {
     "@type": "PostalAddress",
@@ -89,43 +88,18 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body
-        className={`${lilitaOne.variable} ${nunito.variable}`}
-      >
+      <body className={schibsted.variable}>
         <a
-          href="#about"
-          className="fixed left-2 top-2 z-[999] -translate-y-16 rounded-lg bg-ocean px-4 py-2 text-sm font-bold text-white transition-transform focus:translate-y-0"
+          href="#main"
+          className="fixed top-2 left-2 z-50 -translate-y-20 rounded-[var(--radius)] bg-accent px-4 py-2 text-small font-medium text-accent-ink focus:translate-y-0"
         >
           Skip to content
         </a>
-        <OceanWaves />
         {children}
         <ClientExtras />
         <script
           dangerouslySetInnerHTML={{
-            __html: `
-console.log(
-  "%c" +
-  "\\n" +
-  "    ____  _       _ _            \\n" +
-  "   / ___|| |_ ___| | | __ _ _ __\\n" +
-  "   \\\\___ \\\\| __/ _ \\\\ | |/ _\` | '__|\\n" +
-  "    ___) | ||  __/ | | (_| | |  \\n" +
-  "   |____/ \\\\__\\\\___|_|_|\\\\__,_|_|  \\n" +
-  "                                 \\n" +
-  "   🌴 stellar-web.dev            \\n" +
-  "   Built by Jelte Homminga       \\n" +
-  "   Next.js 16 · React 19 · Bali  \\n" +
-  "                                 \\n" +
-  "   Try: Konami code, type \\"coffee\\" or \\"claude\\"\\n",
-  "color: #0c8a9e; font-family: monospace; font-size: 12px; line-height: 1.4"
-);
-console.log(
-  "%c🤖 AI-augmented with Cursor & Claude%c — because shipping > debating",
-  "color: #8b5cf6; font-weight: bold; font-size: 13px",
-  "color: #5c4033; font-size: 13px"
-);
-`,
+            __html: `console.log("%cstellar-web.dev%c\\nBuilt by Jelte Homminga with Next.js and Claude Code.\\nThere is one hidden thing on this site. It involves a famous key sequence.", "font: 600 14px system-ui; color: #065563", "font: 13px system-ui; color: inherit")`,
           }}
         />
         <Analytics />
