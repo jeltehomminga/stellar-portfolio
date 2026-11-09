@@ -4,7 +4,9 @@ import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import remarkGfm from "remark-gfm"
 import remarkUnwrapImages from "remark-unwrap-images"
+import rehypePrettyCode from "rehype-pretty-code"
 import { getAllPosts, getPostBySlug, getReadingTime } from "@/lib/blog"
+import { formatDate } from "@/lib/format"
 import { mdxComponents } from "@/components/blog/mdx-components"
 
 type BlogPostPageProps = {
@@ -22,7 +24,7 @@ export const generateMetadata = async ({
   if (!post) return {}
 
   return {
-    title: `${post.title} — Stellar Web Development`,
+    title: `${post.title}, Jelte Homminga`,
     description: post.description,
     openGraph: {
       title: post.title,
@@ -43,21 +45,14 @@ export const generateMetadata = async ({
   }
 }
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })
-}
-
 const BlogPostPage = async ({ params }: BlogPostPageProps) => {
   const { slug } = await params
   const post = getPostBySlug(slug)
   if (!post) notFound()
 
   const readingTime = getReadingTime(post.content)
+  // The page renders the title from frontmatter; drop the duplicate MDX h1.
+  const body = post.content.replace(/^\s*#\s+.+\n/, "")
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,46 +79,42 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="min-h-screen pt-24 pb-32">
-        <div className="relative z-[5] mx-auto max-w-[720px] px-6">
-          <Link
-            href="/blog"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm font-bold text-ocean transition-colors hover:text-sunset"
-          >
-            <span>&#8592;</span> All posts
-          </Link>
-
-          <header className="mb-10">
-            <div className="mb-3 flex flex-wrap items-center gap-3">
-              <time className="text-sm text-text-mid">
-                {formatDate(post.date)}
-              </time>
-              <span className="text-sm text-text-mid">
-                {readingTime} min read
-              </span>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-sand-warm px-2.5 py-0.5 text-xs font-medium text-ocean-deep"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </header>
-
-          <div className="prose-tropical">
-            <MDXRemote
-              source={post.content}
-              components={mdxComponents}
-              options={{
-                mdxOptions: { remarkPlugins: [remarkGfm, remarkUnwrapImages] },
-              }}
-            />
-          </div>
+      <article className="pt-12 sm:pt-20">
+        <header className="mb-10">
+          <h1 className="text-title font-semibold">{post.title}</h1>
+          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-small text-ink-faint">
+            <time dateTime={post.date} className="tabular">
+              {formatDate(post.date)}
+            </time>
+            <span>{readingTime} min read</span>
+          </p>
+        </header>
+        <div className="font-serif text-prose">
+          <MDXRemote
+            source={body}
+            components={mdxComponents}
+            options={{
+              mdxOptions: {
+                remarkPlugins: [remarkGfm, remarkUnwrapImages],
+                rehypePlugins: [
+                  [
+                    rehypePrettyCode,
+                    {
+                      theme: { light: "github-light", dark: "github-dark-dimmed" },
+                      keepBackground: false,
+                      defaultLang: "plaintext",
+                    },
+                  ],
+                ],
+              },
+            }}
+          />
         </div>
+        <footer className="mt-16 border-t border-rule pt-6 font-sans">
+          <Link href="/blog" className="link">
+            All posts
+          </Link>
+        </footer>
       </article>
     </>
   )

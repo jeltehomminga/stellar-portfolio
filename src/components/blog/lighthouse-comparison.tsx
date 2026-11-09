@@ -9,9 +9,9 @@ export const LighthouseComparison = () => (
           alt="Final Lighthouse mobile score"
           width={600}
           height={200}
-          className="rounded-xl shadow-md"
+          className="rounded-[var(--radius)] border border-rule"
         />
-        <span className="text-center text-xs font-bold text-text-mid">
+        <span className="font-sans text-small text-ink-faint">
           Mobile
         </span>
       </div>
@@ -21,9 +21,9 @@ export const LighthouseComparison = () => (
           alt="Final Lighthouse desktop score"
           width={600}
           height={200}
-          className="rounded-xl shadow-md"
+          className="rounded-[var(--radius)] border border-rule"
         />
-        <span className="text-center text-xs font-bold text-text-mid">
+        <span className="font-sans text-small text-ink-faint">
           Desktop
         </span>
       </div>

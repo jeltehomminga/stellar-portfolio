@@ -1,149 +1,88 @@
 import Image from "next/image"
 import type { MDXComponents } from "mdx/types"
 import { cn } from "@/lib/utils"
+import { Caption } from "./caption"
 import { ThemeGrid } from "./theme-grid"
 import { LighthouseComparison } from "./lighthouse-comparison"
 
 type BlogImageProps = {
   src?: string
   alt?: string
+  title?: string
 }
 
-const BlogImage = ({ src, alt }: BlogImageProps) => {
+/** Markdown image → next/image in a figure. The title (or alt) becomes the caption. */
+const BlogImage = ({ src, alt, title }: BlogImageProps) => {
   if (!src) return null
-
   const isPhone = src.includes("claude-phone")
-  const isPortfolio = src.includes("portfolio.png")
-
-  if (isPhone) {
-    return (
-      <figure className="my-8 flex justify-center">
-        <div className="w-1/3 min-w-[180px] max-w-[260px]">
-          <Image
-            src={src}
-            alt={alt ?? ""}
-            width={400}
-            height={600}
-            className="rounded-2xl shadow-lg"
-          />
-        </div>
-        {alt && <figcaption className="sr-only">{alt}</figcaption>}
-      </figure>
-    )
-  }
-
-  if (isPortfolio) {
-    return (
-      <figure className="my-8">
-        <Image
-          src={src}
-          alt={alt ?? ""}
-          width={1200}
-          height={750}
-          className="rounded-2xl border-[3px] border-ocean-deep shadow-lg"
-        />
-        {alt && (
-          <figcaption className="mt-2 text-center text-sm text-text-mid italic">
-            {alt}
-          </figcaption>
-        )}
-      </figure>
-    )
-  }
+  const caption = title ?? alt
 
   return (
-    <figure className="my-8">
+    <figure className={cn("my-8", isPhone && "mx-auto w-1/2 max-w-[260px] min-w-[180px]")}>
       <Image
         src={src}
         alt={alt ?? ""}
-        width={1200}
-        height={750}
-        className="rounded-2xl shadow-lg"
+        width={isPhone ? 400 : 1200}
+        height={isPhone ? 600 : 750}
+        sizes={isPhone ? "260px" : "(max-width: 720px) 100vw, 672px"}
+        className="h-auto w-full rounded-[var(--radius)] border border-rule"
       />
-      {alt && (
-        <figcaption className="mt-2 text-center text-sm text-text-mid italic">
-          {alt}
-        </figcaption>
-      )}
+      {caption && <Caption>{caption}</Caption>}
     </figure>
   )
 }
 
+const isExternal = (href?: string) => href?.startsWith("http")
+
 export const mdxComponents: MDXComponents = {
-  h1: (props) => (
-    <h1
-      className="font-heading text-4xl text-ocean-deep mb-6 leading-tight"
-      {...props}
-    />
-  ),
-  h2: (props) => (
-    <h2
-      className="font-heading text-2xl text-ocean-deep mt-12 mb-4 pt-6 border-t-2 border-sand-warm"
-      {...props}
-    />
-  ),
-  h3: (props) => (
-    <h3
-      className="font-sans text-xl font-bold text-ocean mt-8 mb-3"
-      {...props}
-    />
-  ),
-  p: (props) => <p className="mb-5 leading-relaxed text-text-dark" {...props} />,
-  a: (props) => (
+  h1: (props) => <h2 className="mt-12 mb-4 font-sans text-h2 font-semibold" {...props} />,
+  h2: (props) => <h2 className="mt-12 mb-4 font-sans text-h2 font-semibold" {...props} />,
+  h3: (props) => <h3 className="mt-8 mb-3 font-sans text-h3 font-semibold" {...props} />,
+  h4: (props) => <h4 className="mt-6 mb-2 font-sans font-semibold" {...props} />,
+  p: (props) => <p className="mb-5 max-w-[65ch]" {...props} />,
+  a: ({ href, ...props }) => (
     <a
-      className="text-ocean underline underline-offset-4 decoration-ocean-light hover:text-sunset transition-colors"
-      target={props.href?.startsWith("http") ? "_blank" : undefined}
-      rel={props.href?.startsWith("http") ? "noopener noreferrer" : undefined}
+      href={href}
+      className="link"
+      target={isExternal(href) ? "_blank" : undefined}
+      rel={isExternal(href) ? "noopener noreferrer" : undefined}
       {...props}
     />
   ),
-  strong: (props) => <strong className="text-ocean-deep font-bold" {...props} />,
-  em: (props) => <em className="text-text-mid" {...props} />,
-  code: (props) => (
+  strong: (props) => <strong className="font-semibold" {...props} />,
+  code: ({ className, ...props }) => (
     <code
-      className="font-mono bg-sand-warm px-1.5 py-0.5 rounded text-ai-purple text-sm"
-      {...props}
-    />
-  ),
-  pre: ({ className, ...props }) => (
-    <pre
       className={cn(
-        "my-6 overflow-x-auto rounded-xl bg-ocean-deep p-4 text-sm leading-relaxed text-sand [&>code]:bg-transparent [&>code]:p-0 [&>code]:text-inherit [&>code]:text-sm",
+        // Inline code only; fenced code is styled via pre[data-language] in globals.css
+        "[:not(pre)>&]:rounded-[4px] [:not(pre)>&]:bg-paper-raised [:not(pre)>&]:px-1.5 [:not(pre)>&]:py-0.5 [:not(pre)>&]:font-mono [:not(pre)>&]:text-[0.82em]",
         className,
       )}
       {...props}
     />
   ),
-  ul: (props) => <ul className="mb-5 ml-6 list-disc space-y-1" {...props} />,
-  ol: (props) => <ol className="mb-5 ml-6 list-decimal space-y-1" {...props} />,
-  li: (props) => <li className="leading-relaxed text-text-dark" {...props} />,
+  ul: (props) => <ul className="mb-5 ml-6 max-w-[62ch] list-disc space-y-2 marker:text-ink-faint" {...props} />,
+  ol: (props) => <ol className="mb-5 ml-6 max-w-[62ch] list-decimal space-y-2 marker:text-ink-faint" {...props} />,
+  li: (props) => <li className="pl-1" {...props} />,
   blockquote: (props) => (
-    <blockquote
-      className="my-6 border-l-4 border-sunset pl-4 italic text-text-mid"
-      {...props}
-    />
+    <blockquote className="my-6 border-l-2 border-accent pl-5 text-ink-muted italic" {...props} />
   ),
-  hr: () => <hr className="my-10 border-t-2 border-sand-warm" />,
+  hr: () => <hr className="my-12 border-rule" />,
   table: (props) => (
-    <div className="my-6 overflow-x-auto">
-      <table className="w-full border-collapse text-sm" {...props} />
+    <div className="my-6 overflow-x-auto font-sans">
+      <table className="w-full border-collapse text-small" {...props} />
     </div>
   ),
-  thead: (props) => <thead className="bg-sand-warm" {...props} />,
-  th: (props) => (
-    <th
-      className="border-b-2 border-sand-warm px-3 py-2 text-left font-bold text-ocean-deep"
-      {...props}
-    />
-  ),
-  td: (props) => (
-    <td
-      className="border-b border-sand-warm px-3 py-2 align-top leading-relaxed text-text-dark"
-      {...props}
-    />
-  ),
+  th: (props) => <th className="border-b border-ink-faint px-3 py-2 text-left font-semibold" {...props} />,
+  td: (props) => <td className="border-b border-rule px-3 py-2 align-top" {...props} />,
   img: BlogImage as MDXComponents["img"],
   ThemeGrid,
   LighthouseComparison,
-  Image,
+  Image: ({ className, alt, ...props }: React.ComponentProps<typeof Image>) => (
+    <Image
+      {...props}
+      alt={alt}
+      sizes={props.sizes ?? "(max-width: 720px) 100vw, 672px"}
+      className={cn("h-auto w-full rounded-[var(--radius)] border border-rule", className?.replace(/rounded-\S+|shadow-\S+/g, ""))}
+    />
+  ),
 }
