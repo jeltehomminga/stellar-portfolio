@@ -1,6 +1,6 @@
 # stellar-web.dev — Design System (Editorial)
 
-Status: **draft, awaiting type pairing choice** (see §2). Replaces the Tropical theme.
+Status: **in use** (Nov 2026). Replaces the Tropical theme. Pairing C chosen.
 
 ## 1. Brief in one line
 
@@ -14,20 +14,17 @@ specific, and fast. The work and the writing are the decoration.
 
 ## 2. Typography
 
-Pick one pairing (specimens: `/specimen`, light and dark side by side):
+| Role | Face | Loaded |
+| --- | --- | --- |
+| Headings, UI, homepage body | Schibsted Grotesk (variable) | Root layout, preloaded |
+| Blog prose | Source Serif 4 (variable, with italic) | Blog layout only |
+| Code | JetBrains Mono | Blog layout only, not preloaded |
 
-| Option | Headings | UI / body | Long-form prose | Code |
-| --- | --- | --- | --- | --- |
-| A | Newsreader 400 | IBM Plex Sans | IBM Plex Sans | JetBrains Mono |
-| B | Instrument Sans 500 | Instrument Sans | Instrument Sans | JetBrains Mono |
-| **C (recommended)** | Schibsted Grotesk 600 | Schibsted Grotesk | Source Serif 4 | JetBrains Mono |
-
-Why C: the homepage reads crisp and engineered, and blog posts read like a publication. The blog is
-the proof of the AI-first workflow, so it gets the more literary face. A is lovely but "cream paper +
-serif display" is currently the most common AI-generated look. B is the safest and the least distinct.
+Pairing C from the specimen round (A: Newsreader + IBM Plex Sans, B: Instrument Sans throughout).
+The homepage reads crisp and engineered; posts read like a publication.
 
 All loaded through `next/font` with `display: "swap"` and `adjustFontFallback: true` (keeps CLS at 0,
-same as today). Only the weights we use are loaded. Mono is loaded with `preload: false` (blog only).
+same as today). Only the weights we use are loaded. OG images embed static Schibsted Grotesk TTFs from `src/assets/fonts/`.
 
 ### Scale
 
@@ -54,7 +51,7 @@ Rules
 ## 3. Colour
 
 Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS custom properties on
-`:root`, swapped under `prefers-color-scheme: dark` and `[data-theme="dark"]`.
+`:root` in `globals.css`, swapped under `prefers-color-scheme: dark` (no toggle, no client JS).
 
 | Token | Light | Dark | Use | Contrast on paper (L / D) |
 | --- | --- | --- | --- | --- |
@@ -127,9 +124,9 @@ Jun 2026   Stop screenshotting Figma
 - **Case study:** `h3` title + optional one-line context, then a definition list with Problem / What I
   did / Outcome. Optional link to the live product or a post.
 - **Post list item:** date (small, faint, tabular) + title (h3 weight) + optional one-line description.
-- **Code blocks:** `--paper-raised` bg, 1px `--rule` border, 6px radius, 16px padding, horizontal scroll, no line wrap.
+- **Code blocks:** highlighted at build time by Shiki (`rehype-pretty-code`, github-light / github-dark-dimmed), `--paper-raised` bg, 1px `--rule` border, 6px radius, horizontal scroll, no line wrap. Three Shiki token colours are overridden in `globals.css` to pass AA.
 - **Images in posts:** full prose width, 6px radius, optional `<figcaption>` in small/faint below.
-- **Photo:** real portrait, 4:5, greyscale-neutral background. Placeholder until supplied: `--paper-raised` block with initials.
+- **Photo:** real portrait, 4:5, neutral background, at `public/images/jelte.jpg`. Until that file exists, About shows a `--paper-raised` block with initials and the OG image omits the photo; both switch automatically at build time.
 - **Headings are real headings:** one `h1` per page, `h2` per section, `h3` per item.
 
 ## 8. Voice

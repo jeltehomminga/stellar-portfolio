@@ -13,61 +13,60 @@
 
 ---
 
-## Project Status (Feb 2026)
+## Project Status (Nov 2026)
 
-**Live at [stellar-web.dev](https://stellar-web.dev)** — deployed on Vercel.
+**Live at [stellar-web.dev](https://stellar-web.dev)**, deployed on Vercel (project `stellar-portfolio`, team `jeltehommingas-projects`).
 
-Lighthouse scores:
+Redesigned in Nov 2026 from the "Tropical" theme to a quiet editorial design (branch `redesign/editorial`).
+The design system lives in **`DESIGN.md`**; read it before changing anything visual.
 
-- Desktop: **100 / 100 / 100 / 100**
-- Mobile: **92 / 100 / 100 / 100**
+Lighthouse after the redesign (local production build, Lighthouse 13.6):
+
+- Home and blog posts: **100 / 100 / 96 / 100** on mobile and desktop (the 96 is the `/_vercel/*` analytics scripts 404ing locally)
+- Mobile home, same machine, before → after: performance 47 → 100, CLS 0.312 → 0, TBT 1.7 s → 50 ms, LCP 3.6 s → 0.8 s
 
 ### Tech Stack
 
-- **Next.js 16.1.6** (Turbopack, App Router)
-- **React 19.2.3**
-- **TypeScript 5**
-- **Tailwind CSS 4** with shadcn/ui + Base UI
+- **Next.js 16** (Turbopack, App Router), **React 19**, **TypeScript 5**
+- **Tailwind CSS 4** with design tokens in `globals.css` (no component library)
+- **MDX** via `next-mdx-remote/rsc`; code highlighting via `rehype-pretty-code` + Shiki (build time, zero client JS)
 - **Vercel** (deployment, analytics, speed insights)
-- Fonts: Lilita One (headings), Nunito (body) — via `next/font`
+- Fonts via `next/font`: Schibsted Grotesk (UI and headings), Source Serif 4 (blog prose), JetBrains Mono (code)
 
 ### Component Architecture
 
-All sections are Server Components except where JS interactivity is needed:
+Everything is a Server Component except the hidden easter egg.
 
-| Component                | Type   | Purpose                                                              |
-| ------------------------ | ------ | -------------------------------------------------------------------- |
-| `hero.tsx`               | Server | Hero section with title, badge, CTAs, caricature image, toast badges |
-| `hero-parallax.tsx`      | Client | Mouse-tracking parallax on hero image (desktop only)                 |
-| `about.tsx`              | Server | Bio, highlight cards                                                 |
-| `tech-stack.tsx`         | Server | Grouped tech pills by competence area                                |
-| `philosophy.tsx`         | Server | 6 engineering philosophy cards                                       |
-| `projects.tsx`           | Server | Project showcase cards                                               |
-| `now.tsx`                | Server | Current focus items                                                  |
-| `experience.tsx`         | Server | Career timeline + fun facts                                          |
-| `contact.tsx`            | Server | Contact section with CTAs                                            |
-| `navigation.tsx`         | Client | Sticky nav with mobile hamburger                                     |
-| `footer.tsx`             | Server | Footer with links                                                    |
-| `ocean-waves.tsx`        | Server | CSS-animated SVG waves (fixed bottom)                                |
-| `client-extras.tsx`      | Client | Lazy wrapper for non-critical JS (dynamic imports, ssr: false)       |
-| `floating-emoji.tsx`     | Client | Decorative emoji scattered along page edges                          |
-| `toast-system.tsx`       | Client | Slide-in toast notifications ("Coffee break", "Claude says hi")      |
-| `cursor-trail.tsx`       | Client | Konami code Easter egg (padel ball cursor trail)                     |
-| `scroll-reveal-init.tsx` | Client | IntersectionObserver for scroll reveal animations                    |
-| `blog/mdx-components.tsx`| Server | Custom MDX component map for blog posts                              |
-| `blog/theme-grid.tsx`    | Server | 3-column theme concept image grid                                    |
-| `blog/lighthouse-comparison.tsx` | Server | Side-by-side Lighthouse score comparison                     |
+| Component | Type | Purpose |
+| --- | --- | --- |
+| `site-header.tsx` | Server | Name + Work / Writing / About links; `current` prop sets `aria-current` |
+| `section.tsx` | Server | Homepage section wrapper: h2 on a hairline, consistent rhythm |
+| `hero.tsx` | Server | H1 headline, two proof paragraphs, availability, Email + LinkedIn |
+| `work.tsx` | Server | Case studies (problem / what I did / outcome) as a `<dl>` |
+| `writing.tsx` | Server | Latest 4 posts via `post-list.tsx` |
+| `post-list.tsx` | Server | Date + title + description rows (homepage and `/blog`) |
+| `experience.tsx` | Server | Compact career list |
+| `about.tsx` | Server | Portrait + bio + personality line + tools as plain text |
+| `portrait.tsx` | Server | Renders `public/images/jelte.jpg` if present, else an initials placeholder |
+| `contact.tsx` | Server | Email, LinkedIn, GitHub |
+| `footer.tsx` | Server | Copyright line + links |
+| `client-extras.tsx` | Client | Lazy-loads `cursor-trail.tsx` (`ssr: false`) |
+| `cursor-trail.tsx` | Client | Konami code → padel-ball cursor trail (hidden easter egg) |
+| `blog/mdx-components.tsx` | Server | MDX element map (headings, links, figures + captions, code, tables) |
+| `blog/caption.tsx` | Server | Shared `<figcaption>` |
+| `blog/theme-grid.tsx`, `blog/lighthouse-comparison.tsx` | Server | Figure components used by the first post |
 
 ### Key Files
 
-- `src/app/layout.tsx` — Root layout, font config, structured data, ASCII console art
-- `src/app/page.tsx` — Single-page layout composing all sections
-- `src/app/globals.css` — Design tokens, animations, wave CSS, scroll reveal
-- `src/app/opengraph-image.tsx` — Dynamic OG image (3 rotating variants per deploy)
-- `src/app/twitter-image.tsx` — Same as OG with Twitter card dimensions
-- `next.config.ts` — Image optimization, inlineCss experiment
-- `public/images/hero-caricature.jpg` — AI-generated caricature (1024x1536, JPEG)
-- `public/images/hero-caricature-og.png` — Smaller version for OG images (267x400, PNG)
+- `DESIGN.md` — design system: type, tokens (light/dark), spacing, motion, component rules, don'ts
+- `src/app/layout.tsx` — root layout, Schibsted Grotesk, metadata, Person JSON-LD, console message
+- `src/app/page.tsx` — homepage composition
+- `src/app/globals.css` — tokens, type scale, link styles, code block styles, reduced motion
+- `src/app/blog/layout.tsx` — loads Source Serif 4 + JetBrains Mono for blog routes only
+- `src/lib/og.tsx` — shared OG image renderer (site + per-post); fonts in `src/assets/fonts/`
+- `src/app/opengraph-image.tsx`, `twitter-image.tsx`, `blog/[slug]/opengraph-image.tsx` — thin wrappers around `og.tsx`
+- `next.config.ts` — image formats/sizes/qualities, `inlineCss`
+- `public/images/jelte.jpg` — **to add**: professional portrait, 4:5, at least 800×1000
 
 ---
 
@@ -286,86 +285,59 @@ Jelte plans to write a blog post about building this portfolio. Target audience:
 
 ## Positioning & Brand Strategy
 
-Jelte wants a **confident but not too bold** tone.
+Freelance **senior frontend & mobile engineer**. AI is how Jelte works (Claude Code, agents),
+not a product feature he sells.
 
-### Current Title & Headline
+LinkedIn headline (keep the site consistent with it):
 
 ```
-AI-first Frontend Engineer
-Building high-performance consumer apps at scale.
-Based in Bali. Shipping enterprise-grade systems for European markets.
+Senior Frontend & Mobile Engineer · Next.js, React Native & Expo · AI-first workflow · Core contributor to My Luminus (Product of the Year 2026)
 ```
 
-### 4 Differentiators
+Site headline (hero H1):
 
-1. **Remote-First Senior** — Dutch engineer in Bali, delivering for European enterprise
-2. **Architecture-Level** — SSR strategy, caching layers, CI/CD, auth — beyond components
-3. **Mobile Modernization** — RN → Expo migrations, EAS workflows, build cost optimization
-4. **AI-Augmented Dev** — Cursor, Claude, Copilot — AI as a core part of the workflow
+```
+Senior frontend and mobile engineer for teams shipping Next.js and React Native at scale.
+```
 
-### Key Messaging Rules
+### Messaging rules
 
-- **DO**: Emphasize architecture thinking, enterprise scale, AI-augmented workflow
-- **DO**: Mention specific technical decisions (dual-layer caching, Auth0 multi-app, SSR strategy)
-- **DON'T**: Use "passionate developer", "love coding", or generic freelancer language
-- **DON'T**: List tech as a flat wall of badges — group by competence area
+- **DO**: lead with shipped work and outcomes (My Luminus, the Expo migration, CourtScout).
+- **DO**: name specific technical decisions in sentences (dual-layer caching, Auth0 sessions across apps, EAS fingerprinting).
+- **DO**: let the blog prove the AI-first workflow; mention it plainly, once, in the hero and About.
+- **DON'T**: claim AI features shipped to users. Never.
+- **DON'T**: invent metrics. Only use numbers that are public or that Jelte has confirmed.
+- **DON'T**: use "passionate", "love coding", "AI-powered", jokes in headings, or badge walls of tech.
+- Tone: confident, plain, first person, sentence case. One or two personal lines (Bali, padel, espresso) in About only.
 
 ---
 
-## Design System — Tropical Theme
+## Design System — Editorial
 
-### Color Palette
+Full spec in **`DESIGN.md`**. Summary:
 
-```css
---ocean: #0c8a9e;
---ocean-deep: #065563;
---ocean-light: #17c1e8;
---sand: #faf3e0;
---sand-warm: #f5edd5;
---palm: #3a9d5e;
---palm-dark: #1f6b38;
---sunset: #ff6b35;
---sunset-glow: #ffa06b;
---lava: #e63946;
---wood: #8b6d47;
---coffee: #3e2723;
---padel-yellow: #d4e500;
---ai-purple: #8b5cf6; /* Used for AI-related elements */
---ai-purple-light: #a78bfa;
-```
-
-### Typography
-
-- **Headings**: Lilita One (Google Fonts) — chunky, tropical feel
-- **Body**: Nunito (Google Fonts) — warm, rounded sans-serif
-- **Code**: System monospace (`ui-monospace, monospace`) — Fira Code was removed for performance
-
-### Visual Elements
-
-- **Cards**: frosted glass background, `1.5px` border, `20px` radius, hover lift
-- **AI elements**: Purple accent (`--ai-purple`) for AI-related cards, pills, borders
-- **Floating emoji**: 🌴🥥☕🌺🏝️🏸🌊 scattered along edges, scrolls with page
-- **Toast badges**: Decorative "Bug!", "Fix ASAP!", "Shipped!", "Lighthouse 100", "A11y 100%", "CWV all green" near hero image
-- **Slide-in toasts**: Animated notifications that pop in while browsing ("Coffee break", "Claude says hi")
-- **Ocean waves**: SVG waves at bottom (3 layers, CSS animation), reduced on mobile
-- **Easter eggs**: Konami code → padel ball cursor trail, type "coffee" → toast, type "claude" → toast
-- **Console**: ASCII art "Stellar" banner with Easter egg hints
+- **Type**: Schibsted Grotesk (headings, UI, homepage body), Source Serif 4 (blog prose), JetBrains Mono (code only).
+- **Colour**: near-monochrome. Light: paper `#faf9f6`, ink `#1c1b19`, muted `#63605a`, faint `#74706a`, rule `#e4e1da`, accent `#065563` (from the old ocean-deep). Dark mode follows the OS with its own token set; all text pairs pass WCAG AA.
+- **Layout**: single column, left-aligned, 42rem max; 7.5rem date/label column on lists from 640px up.
+- **Shape**: one 6px radius, 1px hairlines, no shadows, no cards.
+- **Motion**: one 400ms opacity fade on the hero; colour/underline transitions on hover; everything off under `prefers-reduced-motion`.
+- **Don't**: emoji, gradients, purple, hover lift, floating/bobbing elements, all-caps eyebrows, mono labels, caricatures.
 
 ---
 
 ## Content Sections
 
-### Sections in order:
+### Homepage, in order
 
-1. **Hero** — H1 "AI-first Frontend Engineer", availability badge, CTAs, caricature with toast badges, 4 differentiator cards
-2. **About** — Bio, business analyst background, AI-first workflow, highlight cards
-3. **Tech Stack** — Grouped by competence area (Frontend Architecture, Mobile, AI Tooling, DevOps, Quality)
-4. **Philosophy** — 6 engineering philosophy cards
-5. **Projects** — MyLuminus Portal, School App, Stellar Web Development
-6. **Now** — Current focus items with status tags
-7. **Experience** — Career timeline (Vattenfall → Ironhack → DGN → Nationale Hypotheekbond → Luminus → Stellar)
-8. **Fun Facts** — Padel, espresso, coconut water, Claude
-9. **Contact** — Email, GitHub, LinkedIn links
+1. **Hero** — H1 headline, two proof paragraphs, "Open to new freelance projects.", Email me (button) + LinkedIn
+2. **Selected work** (`#work`) — My Luminus, School app (RN CLI → Expo), CourtScout
+3. **Writing** (`#writing`) — latest 4 posts + link to `/blog`
+4. **Experience** (`#experience`) — Stellar → Luminus → Frontmen → Nationale Hypotheekbond → DGN → Nuon (Vattenfall)
+5. **About** (`#about`) — portrait, bio, personality line, tools as plain text
+6. **Contact** (`#contact`) — email, LinkedIn, GitHub
+
+Removed in the redesign: tech-stack pills, philosophy cards, Now section, fun facts, differentiator cards,
+floating emoji, toasts, ocean waves, hero parallax, scroll reveal, rotating OG variants.
 
 ---
 
@@ -373,17 +345,17 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 
 ### Next priorities
 
-- [x] Blog section (MDX) — first post live at `/blog/how-i-built-my-portfolio`
-- [ ] Theme system (Tropical / Minimal Pro / Cyberpunk)
-- [ ] Contact form (Resend or server action)
-- [ ] Real project screenshots
-- [ ] Dark mode variant
+- [x] Blog section (MDX)
+- [x] Editorial redesign + dark mode (Nov 2026)
+- [ ] Add professional portrait at `public/images/jelte.jpg`
+- [ ] Confirm or add outcome numbers for the School app case study
+- [ ] React Native accessibility blog post
+- [ ] Contact form (Resend or server action) — only if email proves insufficient
 
 ### Nice to have
 
 - [ ] Page transitions (View Transitions API)
-- [ ] Make "Now" section data-driven (JSON or MDX)
-- [ ] Palm tree edge decorations (illustrated PNGs, not SVG)
+- [ ] RSS feed for the blog
 
 ---
 
@@ -391,8 +363,8 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 
 - Company name is **Stellar Web Development**, NOT Jellyhead
 - Jelte's **business analyst** background is intentional — it's why he thinks about product, not just code
-- The AI-augmented development angle is a major differentiator — should be prominent throughout
-- This portfolio was built entirely with AI tools: Claude (chat on phone for ideation) → Claude Code (for implementation)
+- The AI-first workflow is how Jelte works, shown through the blog; don't overclaim it on the homepage
+- This portfolio was built with AI tools: Claude (chat on phone for ideation) → Claude Code (implementation, and the Nov 2026 redesign)
 - Jelte uses **Cursor** as his IDE
 
 ---
@@ -404,7 +376,9 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 - **Content**: MDX files in `src/content/blog/` with gray-matter frontmatter
 - **Rendering**: `next-mdx-remote/rsc` (Server Component rendering, no client JS)
 - **Routes**: `/blog` (listing), `/blog/[slug]` (individual posts via `generateStaticParams`)
-- **Layout**: `src/app/blog/layout.tsx` wraps blog pages with Navigation + Footer
+- **Layout**: `src/app/blog/layout.tsx` wraps blog pages with SiteHeader + Footer and loads the serif + mono fonts
+- **Title**: rendered from frontmatter; a leading `# Title` line in the MDX is stripped to avoid a duplicate h1
+- **Code**: fenced blocks are highlighted by Shiki at build time; add a language (e.g. tsx) to the fence for highlighting
 
 ### Key Files
 
@@ -436,7 +410,8 @@ Based in Bali. Shipping enterprise-grade systems for European markets.
 ### Image Handling in MDX
 
 - Standard `![alt](src)` markdown images are mapped to `next/image` via BlogImage component
-- Special cases: `claude-phone.jpg` renders at 33% width centered, `portfolio.png` gets ocean-deep border
+- Markdown `![alt](src "caption")`: the title (or alt) becomes the figure caption
+- Special case: `claude-phone.jpg` renders narrower, centred
 - For grids or side-by-side layouts, use JSX components: `<ThemeGrid />`, `<LighthouseComparison />`
 
 ### SEO
