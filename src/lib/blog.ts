@@ -4,7 +4,7 @@ import matter from "gray-matter"
 
 const contentDir = path.join(process.cwd(), "src/content/blog")
 
-type BlogPost = {
+export type BlogPost = {
   title: string
   date: string
   description: string
