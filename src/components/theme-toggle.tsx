@@ -25,6 +25,26 @@ const subscribe = (onChange: () => void) => {
   }
 }
 
+const THEME_COLOR: Record<Theme, string> = { light: "#faf9f6", dark: "#141516" }
+
+/**
+ * Keep the browser chrome in step with the page. React owns the two
+ * media-query theme-color metas, so an explicit choice goes in a separate,
+ * script-owned meta placed first in <head> (browsers use the first match).
+ */
+const syncThemeColor = (override: Theme | null) => {
+  const existing = document.getElementById("theme-color-override")
+  if (!override) {
+    existing?.remove()
+    return
+  }
+  const meta = (existing as HTMLMetaElement | null) ?? document.createElement("meta")
+  meta.name = "theme-color"
+  meta.id = "theme-color-override"
+  meta.content = THEME_COLOR[override]
+  if (!existing) document.head.prepend(meta)
+}
+
 const applyTheme = (next: Theme) => {
   const systemTheme: Theme = darkQuery().matches ? "dark" : "light"
   const root = document.documentElement
@@ -34,12 +54,15 @@ const applyTheme = (next: Theme) => {
     if (next === systemTheme) {
       localStorage.removeItem(STORAGE_KEY)
       delete root.dataset.theme
+      syncThemeColor(null)
     } else {
       localStorage.setItem(STORAGE_KEY, next)
       root.dataset.theme = next
+      syncThemeColor(next)
     }
   } catch {
     root.dataset.theme = next
+    syncThemeColor(next)
   }
 }
 

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next"
+import type { Metadata } from "next"
 import { Schibsted_Grotesk } from "next/font/google"
 import "./globals.css"
 import { ClientExtras } from "@/components/client-extras"
@@ -37,12 +37,6 @@ export const metadata: Metadata = {
   },
 }
 
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf9f6" },
-    { media: "(prefers-color-scheme: dark)", color: "#141516" },
-  ],
-}
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -84,10 +78,14 @@ export default function RootLayout({
     // data-theme is set by the script below before hydration.
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Apply a stored theme choice before first paint (no flash). */}
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf9f6" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#141516" />
+        {/* Apply a stored theme choice before first paint (no flash). The browser-chrome
+            colour goes in a separate, script-owned meta: React re-inserts its own
+            meta tags if their attributes change before hydration. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`,
+            __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t;var m=document.createElement("meta");m.name="theme-color";m.id="theme-color-override";m.content=t==="dark"?"#141516":"#faf9f6";document.head.prepend(m)}}catch(e){}`,
           }}
         />
         <script

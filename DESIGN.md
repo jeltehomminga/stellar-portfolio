@@ -53,7 +53,7 @@ Rules
 Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS custom properties on
 `:root` in `globals.css`. Dark tokens apply under `[data-theme="dark"]`, or under `prefers-color-scheme: dark` unless `[data-theme="light"]` is set.
 
-**Theme toggle** (sun/moon button in the header): first visit follows the OS. Choosing the other theme stores it in `localStorage` and sets `data-theme` on `<html>`; choosing the OS theme again clears the override. An inline script in `<head>` applies the stored choice before first paint, so there is no flash. Without JS the OS preference still applies. The switch cross-fades via `startViewTransition` (skipped under reduced motion).
+**Theme toggle** (sun/moon button in the header): first visit follows the OS. Choosing the other theme stores it in `localStorage` and sets `data-theme` on `<html>`; choosing the OS theme again clears the override. An inline script in `<head>` applies the stored choice before first paint, so there is no flash. The browser chrome follows too: React owns two media-query `theme-color` metas, and an explicit choice adds a script-owned `#theme-color-override` meta first in `<head>` (never mutate React's metas: it re-inserts them if their attributes change before hydration). Without JS the OS preference still applies. The switch cross-fades via `startViewTransition` (skipped under reduced motion).
 
 | Token | Light | Dark | Use | Contrast on paper (L / D) |
 | --- | --- | --- | --- | --- |

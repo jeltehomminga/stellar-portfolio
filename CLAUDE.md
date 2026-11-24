@@ -51,6 +51,7 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 | `portrait.tsx` | Server | Renders `public/images/jelte.jpg` if present, else an initials placeholder |
 | `contact.tsx` | Server | Email, LinkedIn, GitHub |
 | `footer.tsx` | Server | Copyright line + links |
+| `app/not-found.tsx` | Server | Styled 404 with header, footer and links to work and writing |
 | `client-extras.tsx` | Client | Lazy-loads `cursor-trail.tsx` (`ssr: false`) |
 | `cursor-trail.tsx` | Client | Konami code → padel-ball cursor trail (hidden easter egg) |
 | `blog/mdx-components.tsx` | Server | MDX element map (headings, links, figures + captions, code, tables) |
