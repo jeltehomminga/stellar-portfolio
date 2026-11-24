@@ -51,7 +51,9 @@ Rules
 ## 3. Colour
 
 Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS custom properties on
-`:root` in `globals.css`, swapped under `prefers-color-scheme: dark` (no toggle, no client JS).
+`:root` in `globals.css`. Dark tokens apply under `[data-theme="dark"]`, or under `prefers-color-scheme: dark` unless `[data-theme="light"]` is set.
+
+**Theme toggle** (sun/moon button in the header): first visit follows the OS. Choosing the other theme stores it in `localStorage` and sets `data-theme` on `<html>`; choosing the OS theme again clears the override. An inline script in `<head>` applies the stored choice before first paint, so there is no flash. Without JS the OS preference still applies. The switch cross-fades via `startViewTransition` (skipped under reduced motion).
 
 | Token | Light | Dark | Use | Contrast on paper (L / D) |
 | --- | --- | --- | --- | --- |
@@ -129,6 +131,7 @@ Easing: `--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1)`.
 | Availability | Green dot sends out a ring three times, then rests | 1.6s × 3, starts at 900ms |
 | Scroll | Section tab draws in from the left; case studies, posts and roles glide up 20px, transform only, never opacity (`.reveal`) | Scroll-driven (`animation-timeline: view()`); reveals finish within the first 96px of entry |
 | Hover / focus | Post title underline grows left to right; date turns accent; links thicken underline; button darkens | 150–300ms |
+| Theme switch | Whole page cross-fades between themes (`startViewTransition`) | 220ms |
 | Navigation | Post titles morph between list and article (React `<ViewTransition>`); the rest cross-fades | 380ms / 220ms |
 
 Rules

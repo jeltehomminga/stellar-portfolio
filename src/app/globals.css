@@ -25,8 +25,11 @@
   --hue-ocean: #0c8a9e;
 }
 
+/* Dark tokens apply when the visitor chose dark, or when the OS is dark and
+   they haven't chosen light. data-theme is set before paint by the inline
+   script in layout.tsx; without JS the OS preference still works. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --paper: #141516;
     --paper-raised: #1c1d1f;
     --ink: #ecebe7;
@@ -40,6 +43,26 @@
     --hue-palm: #5cc07f;
     --hue-ocean: #3cc0d4;
   }
+}
+:root[data-theme="dark"] {
+  --paper: #141516;
+  --paper-raised: #1c1d1f;
+  --ink: #ecebe7;
+  --ink-muted: #a3a09a;
+  --ink-faint: #7f7c76;
+  --rule: #2a2b2c;
+  --accent: #7cc0ca;
+  --accent-ink: #141516;
+  --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--paper));
+  --hue-sunset: #ff8a5c;
+  --hue-palm: #5cc07f;
+  --hue-ocean: #3cc0d4;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -322,9 +345,12 @@ pre[data-language] span {
   color: var(--shiki-light);
 }
 @media (prefers-color-scheme: dark) {
-  pre[data-language] span {
+  :root:not([data-theme="light"]) pre[data-language] span {
     color: var(--shiki-dark);
   }
+}
+:root[data-theme="dark"] pre[data-language] span {
+  color: var(--shiki-dark);
 }
 
 /* Konami easter egg: padel-ball cursor trail (hidden until triggered) */
@@ -352,7 +378,29 @@ pre[data-language] span[style*="--shiki-light:#D73A49"] {
   color: #b8323f;
 }
 @media (prefers-color-scheme: dark) {
-  pre[data-language] span[style*="--shiki-dark:#768390"] {
+  :root:not([data-theme="light"]) pre[data-language] span[style*="--shiki-dark:#768390"] {
     color: #8a95a2;
+  }
+}
+:root[data-theme="dark"] pre[data-language] span[style*="--shiki-dark:#768390"] {
+  color: #8a95a2;
+}
+
+/* Theme toggle: show the moon in light mode, the sun in dark mode. */
+.theme-icon-sun {
+  display: none;
+}
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-sun {
+    display: block;
+  }
+  :root:not([data-theme="light"]) .theme-icon-moon {
+    display: none;
   }
 }

@@ -35,11 +35,12 @@ Lighthouse after the redesign (local production build, Lighthouse 13.6):
 
 ### Component Architecture
 
-Everything is a Server Component except the hidden easter egg.
+Everything is a Server Component except the theme toggle and the hidden easter egg.
 
 | Component | Type | Purpose |
 | --- | --- | --- |
-| `site-header.tsx` | Server | Name + Work / Writing / About links; `current` prop sets `aria-current` |
+| `site-header.tsx` | Server | Name + Work / Writing / About links + theme toggle; `current` prop sets `aria-current`; wraps to two lines below ~360px |
+| `theme-toggle.tsx` | Client | Light/dark toggle: follows the OS until chosen, stores the choice in `localStorage`, `aria-pressed` state, icons switched by CSS |
 | `section.tsx` | Server | Homepage section wrapper: h2 on a hairline, consistent rhythm |
 | `hero.tsx` | Server | H1 headline, two proof paragraphs, availability, Email + LinkedIn |
 | `work.tsx` | Server | Case studies (problem / what I did / outcome) as a `<dl>` |
@@ -318,7 +319,7 @@ Senior frontend and mobile engineer for teams shipping Next.js and React Native 
 Full spec in **`DESIGN.md`**. Summary:
 
 - **Type**: Schibsted Grotesk (headings, UI, homepage body), Source Serif 4 (blog prose), JetBrains Mono (code only).
-- **Colour**: warm paper `#faf9f6`, ink `#1c1b19`, greys, one teal accent `#065563` (hero headline, links, section tabs). Three project hues from the old palette (sunset, palm, ocean) appear only as small markers by case-study titles; Outcome rows use the teal accent tint (a warm tint read as an error state). Palm also marks availability. Dark mode follows the OS; all text pairs pass WCAG AA.
+- **Colour**: warm paper `#faf9f6`, ink `#1c1b19`, greys, one teal accent `#065563` (hero headline, links, section tabs). Three project hues from the old palette (sunset, palm, ocean) appear only as small markers by case-study titles; Outcome rows use the teal accent tint (a warm tint read as an error state). Palm also marks availability. Dark mode follows the OS until the visitor uses the header toggle (stored in `localStorage`, applied before paint by an inline script in `layout.tsx`); all text pairs pass WCAG AA.
 - **Layout**: single column, left-aligned, 42rem max; 7.5rem date/label column on lists from 640px up.
 - **Shape**: one 6px radius, 1px hairlines, no shadows, no cards.
 - **Motion** (all CSS): staggered hero entrance, a status-dot ring, scroll-driven section tabs and content reveals, underline-grow hovers, and React `<ViewTransition>` title morphs between the post list and posts (`experimental.viewTransition`). Everything off under `prefers-reduced-motion`.
