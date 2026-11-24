@@ -302,7 +302,8 @@ Senior frontend and mobile engineer for teams shipping Next.js and React Native 
 
 ### Messaging rules
 
-- **DO**: lead with shipped work and outcomes (My Luminus, the Expo migration, CourtScout).
+- **DO**: lead with shipped work and outcomes (My Luminus web and Expo app, the Expo migration, CourtScout).
+- **DO**: give My Luminus full credit: Jelte built the redesigned My Luminus app with Expo and did accessibility work on the web portal, the component library and the app.
 - **DO**: name specific technical decisions in sentences (dual-layer caching, Auth0 sessions across apps, EAS fingerprinting).
 - **DO**: let the blog prove the AI-first workflow; mention it plainly, once, in the hero and About.
 - **DON'T**: claim AI features shipped to users. Never.
@@ -317,10 +318,10 @@ Senior frontend and mobile engineer for teams shipping Next.js and React Native 
 Full spec in **`DESIGN.md`**. Summary:
 
 - **Type**: Schibsted Grotesk (headings, UI, homepage body), Source Serif 4 (blog prose), JetBrains Mono (code only).
-- **Colour**: near-monochrome. Light: paper `#faf9f6`, ink `#1c1b19`, muted `#63605a`, faint `#74706a`, rule `#e4e1da`, accent `#065563` (from the old ocean-deep). Dark mode follows the OS with its own token set; all text pairs pass WCAG AA.
+- **Colour**: warm paper `#faf9f6`, ink `#1c1b19`, greys, one teal accent `#065563` (hero headline, links, section tabs). Three project hues from the old palette (sunset, palm, ocean) appear only as small markers by case-study titles; Outcome rows use the teal accent tint (a warm tint read as an error state). Palm also marks availability. Dark mode follows the OS; all text pairs pass WCAG AA.
 - **Layout**: single column, left-aligned, 42rem max; 7.5rem date/label column on lists from 640px up.
 - **Shape**: one 6px radius, 1px hairlines, no shadows, no cards.
-- **Motion**: one 400ms opacity fade on the hero; colour/underline transitions on hover; everything off under `prefers-reduced-motion`.
+- **Motion** (all CSS): staggered hero entrance, a status-dot ring, scroll-driven section tabs and content reveals, underline-grow hovers, and React `<ViewTransition>` title morphs between the post list and posts (`experimental.viewTransition`). Everything off under `prefers-reduced-motion`.
 - **Don't**: emoji, gradients, purple, hover lift, floating/bobbing elements, all-caps eyebrows, mono labels, caricatures.
 
 ---
@@ -330,7 +331,7 @@ Full spec in **`DESIGN.md`**. Summary:
 ### Homepage, in order
 
 1. **Hero** — H1 headline, two proof paragraphs, "Open to new freelance projects.", Email me (button) + LinkedIn
-2. **Selected work** (`#work`) — My Luminus, School app (RN CLI → Expo), CourtScout
+2. **Selected work** (`#work`) — My Luminus (web portal + redesigned Expo app + accessibility across web, component library and app), School app (RN CLI → Expo), CourtScout
 3. **Writing** (`#writing`) — latest 4 posts + link to `/blog`
 4. **Experience** (`#experience`) — Stellar → Luminus → Frontmen → Nationale Hypotheekbond → DGN → Nuon (Vattenfall)
 5. **About** (`#about`) — portrait, bio, personality line, tools as plain text

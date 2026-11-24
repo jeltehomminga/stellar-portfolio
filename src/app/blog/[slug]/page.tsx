@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { ViewTransition } from "react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
@@ -7,6 +8,7 @@ import remarkUnwrapImages from "remark-unwrap-images"
 import rehypePrettyCode from "rehype-pretty-code"
 import { getAllPosts, getPostBySlug, getReadingTime } from "@/lib/blog"
 import { formatDate } from "@/lib/format"
+import { postTitleTransition } from "@/components/post-list"
 import { mdxComponents } from "@/components/blog/mdx-components"
 
 type BlogPostPageProps = {
@@ -81,7 +83,9 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
       />
       <article className="pt-12 sm:pt-20">
         <header className="mb-10">
-          <h1 className="text-title font-semibold">{post.title}</h1>
+          <ViewTransition name={postTitleTransition(slug)}>
+            <h1 className="text-title font-semibold">{post.title}</h1>
+          </ViewTransition>
           <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-small text-ink-faint">
             <time dateTime={post.date} className="tabular">
               {formatDate(post.date)}

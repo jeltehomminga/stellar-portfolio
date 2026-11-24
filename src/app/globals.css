@@ -16,6 +16,13 @@
   --rule: #e4e1da;
   --accent: #065563;
   --accent-ink: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 7%, var(--paper));
+
+  /* Project hues — nods to the old tropical palette. Used only as markers
+     and tints that identify a project or a status, never for body text. */
+  --hue-sunset: #e8622c;
+  --hue-palm: #2f8a52;
+  --hue-ocean: #0c8a9e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,6 +35,10 @@
     --rule: #2a2b2c;
     --accent: #7cc0ca;
     --accent-ink: #141516;
+    --accent-soft: color-mix(in srgb, var(--accent) 9%, var(--paper));
+    --hue-sunset: #ff8a5c;
+    --hue-palm: #5cc07f;
+    --hue-ocean: #3cc0d4;
   }
 }
 
@@ -40,6 +51,10 @@
   --color-rule: var(--rule);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-hue-sunset: var(--hue-sunset);
+  --color-hue-palm: var(--hue-palm);
+  --color-hue-ocean: var(--hue-ocean);
 
   --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
@@ -138,17 +153,123 @@
   }
 }
 
-/* One page-load moment: the hero fades in (opacity only, no layout shift). */
-@keyframes fade-in {
+/* ------------------------------------------------------------------
+   Motion — see DESIGN.md §6. Everything here is CSS; nothing blocks paint.
+   ------------------------------------------------------------------ */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* 1. Page load: the hero arrives as one short staggered sequence.
+      Transform + opacity only, so it never causes layout shift. */
+@keyframes rise-in {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
+    transform: translateY(10px);
   }
 }
-.hero-fade {
-  animation: fade-in 400ms ease-out both;
+.rise-in {
+  animation: rise-in 600ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* 2. Availability dot: a soft ring that pulses three times, then rests. */
+@keyframes ping {
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.status-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--hue-palm);
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--hue-palm);
+  opacity: 0.5;
+  animation: ping 1.6s var(--ease-out) 900ms 3 both;
+}
+
+/* 3. Section headings: an accent tab on the hairline that draws in as the
+      section scrolls into view (scroll-driven, no JS). */
+.section-rule {
+  position: relative;
+}
+.section-rule::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 2.5rem;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+}
+
+/* 4. Content blocks settle in once as they enter the viewport. */
+@supports (animation-timeline: view()) {
+  @keyframes draw {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  /* Transform only, never opacity: text at the fold edge would otherwise be
+     semi-transparent and fail contrast for whoever's screen ends there. */
+  @keyframes settle {
+    from {
+      transform: translateY(20px);
+    }
+  }
+  /* Longhands on purpose: Lightning CSS would otherwise fold these into an
+     `animation` shorthand containing view(), which browsers reject. */
+  .section-rule::before {
+    animation-name: draw;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: view();
+    animation-range: entry 40% cover 30%;
+  }
+  .reveal {
+    animation-name: settle;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: view();
+    /* Fixed-length range: done within the first 96px of entering, so content
+       that is clearly in view is never left semi-transparent. */
+    animation-range: entry 0px entry 96px;
+  }
+}
+
+/* 5. Post titles: underline grows from the left on hover / focus. */
+.grow-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 300ms var(--ease-out);
+}
+.group:hover .grow-underline,
+.group:focus-visible .grow-underline {
+  background-size: 100% 1px;
+}
+
+/* 6. Page navigations: React <ViewTransition> morphs post titles between
+      the list and the article; everything else cross-fades. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+::view-transition-group(*) {
+  animation-duration: 380ms;
+  animation-timing-function: var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -156,8 +277,22 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .status-dot::after {
+    display: none;
+  }
+  .reveal,
+  .rise-in,
+  .section-rule::before {
+    animation: none !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

@@ -61,10 +61,21 @@ Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS 
 | `--ink-muted` | `#63605a` | `#a3a09a` | Secondary text, descriptions | 6.0 / 7.0 |
 | `--ink-faint` | `#74706a` | `#7f7c76` | Dates, captions (on `--paper` only) | 4.7 / 4.4 |
 | `--rule` | `#e4e1da` | `#2a2b2c` | Hairlines, borders | decorative |
-| `--accent` | `#065563` | `#7cc0ca` | Links, focus ring, primary button | 8.0 / 8.9 |
+| `--accent` | `#065563` | `#7cc0ca` | Hero headline, links, focus ring, primary button, section tab | 8.0 / 8.9 |
 | `--accent-ink` | `#ffffff` | `#141516` | Text on accent | 8.4 / 8.9 |
+| `--accent-soft` | accent 7% on paper | accent 9% on paper | Outcome rows, portrait placeholder | — |
+| `--hue-sunset` | `#e8622c` | `#ff8a5c` | Project hue: My Luminus | marker only |
+| `--hue-palm` | `#2f8a52` | `#5cc07f` | Project hue: School app; availability dot | marker only |
+| `--hue-ocean` | `#0c8a9e` | `#3cc0d4` | Project hue: CourtScout | marker only |
 
-All text pairs pass WCAG AA (≥ 4.5:1). The accent is used for interactive things only, never decoration.
+All text pairs pass WCAG AA (≥ 4.5:1).
+
+Colour always carries meaning:
+- **Teal accent** = the voice of the site: the hero headline, everything interactive, and the short tab on each section rule.
+- **Project hues** (nods to the old tropical sunset / palm / ocean) identify a case study: a small square by its title, nothing more. Never used for text or tinted panels: a warm tint with a coloured left border reads as an error or warning.
+- **Outcome rows** use the accent: `--accent-soft` background with a 2px teal left border, the same for every project.
+- **Palm green** also marks availability (the status dot).
+- No other colours. Body text stays ink and muted grey.
 
 ## 4. Layout & spacing
 
@@ -109,10 +120,23 @@ Jun 2026   Stop screenshotting Figma
 
 ## 6. Motion
 
-- Hover/focus: colour and underline transitions only, 150ms ease-out.
-- One page-load moment: the hero fades in (opacity only, 300ms). Nothing else animates on load or scroll.
-- `prefers-reduced-motion: reduce` disables all transitions and the fade.
-- No transforms on hover (no lift, no scale, no rotate).
+All CSS, no animation library, nothing that blocks paint or shifts layout (transform + opacity only).
+Easing: `--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1)`.
+
+| Moment | What moves | Timing |
+| --- | --- | --- |
+| Page load | Hero blocks rise 10px and fade in, staggered (`.rise-in` + `--i`) | 600ms, 90ms stagger |
+| Availability | Green dot sends out a ring three times, then rests | 1.6s × 3, starts at 900ms |
+| Scroll | Section tab draws in from the left; case studies, posts and roles glide up 20px, transform only, never opacity (`.reveal`) | Scroll-driven (`animation-timeline: view()`); reveals finish within the first 96px of entry |
+| Hover / focus | Post title underline grows left to right; date turns accent; links thicken underline; button darkens | 150–300ms |
+| Navigation | Post titles morph between list and article (React `<ViewTransition>`); the rest cross-fades | 380ms / 220ms |
+
+Rules
+- Scroll reveals never touch opacity: text crossing the fold would be semi-transparent and fail contrast.
+- Scroll-driven animations sit behind `@supports (animation-timeline: view())`; other browsers just show the content.
+- Write scroll-driven animations as longhands: Lightning CSS otherwise merges them into an `animation` shorthand containing `view()`, which browsers drop.
+- `prefers-reduced-motion: reduce` turns all of it off, including view transitions and the status ring.
+- No hover lift, scale or rotate. No looping motion.
 
 ## 7. Components
 
@@ -140,9 +164,9 @@ Jun 2026   Stop screenshotting Figma
 
 - No emoji anywhere in UI copy. No icons as decoration.
 - No Lilita One, Nunito, Inter, Roboto, Geist, or any rounded display face.
-- No purple, no second accent, no gradients (text, buttons or backgrounds).
+- No purple, no gradients (text, buttons or backgrounds). Project hues are markers, never a second accent.
 - No cards with hover lift, no shadows, no glassmorphism.
-- No floating/bobbing badges, toasts, waves, parallax, or scroll-reveal on every section.
+- No floating/bobbing badges, toasts, waves or parallax. Motion follows the table in §6 and nothing else.
 - No rotated images, no caricature or illustrated self-portraits.
 - No all-caps eyebrows, no numbered markers unless the content is a sequence, no "→" on every link.
 - No mono font for dates or labels. Mono is for code.

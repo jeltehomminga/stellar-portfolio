@@ -5,13 +5,13 @@ const roles = [
     period: "2025 – now",
     role: "Freelance frontend & mobile engineer",
     org: "Stellar Web Development, Bali",
-    note: "Consulting for Luminus via Talent-IT. Next.js and React Native apps for international clients.",
+    note: "Consulting for Luminus via Talent-IT on the My Luminus web portal and Expo app. Next.js and React Native work for other clients.",
   },
   {
     period: "2021 – 2025",
     role: "Frontend developer",
     org: "Luminus via Frontmen, Brussels",
-    note: "My Luminus portal: component library, Cypress and Testing Library suites, Next.js boilerplates.",
+    note: "My Luminus: web portal, component library and accessibility, Cypress and Testing Library suites, Next.js boilerplates.",
   },
   {
     period: "2020 – 2021",
@@ -43,7 +43,7 @@ export const Experience = () => (
   <Section id="experience" title="Experience">
     <ol className="space-y-6">
       {roles.map((item) => (
-        <li key={item.period} className="sm:grid sm:grid-cols-[7.5rem_1fr] sm:gap-x-6">
+        <li key={item.period} className="reveal sm:grid sm:grid-cols-[7.5rem_1fr] sm:gap-x-6">
           <p className="tabular text-small text-ink-faint sm:pt-0.5">{item.period}</p>
           <div className="mt-1 sm:mt-0">
             <h3 className="font-semibold">

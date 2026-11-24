@@ -25,7 +25,7 @@ export const Portrait = ({ className = "" }: { className?: string }) =>
     <div
       role="img"
       aria-label="Portrait of Jelte Homminga (coming soon)"
-      className={`grid aspect-[4/5] w-full place-items-center rounded-[var(--radius)] bg-paper-raised text-h2 font-semibold text-ink-faint ${className}`}
+      className={`grid aspect-[4/5] w-full place-items-center rounded-[var(--radius)] bg-accent-soft text-h2 font-semibold text-accent ${className}`}
     >
       JH
     </div>
