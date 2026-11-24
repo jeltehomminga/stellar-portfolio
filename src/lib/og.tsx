@@ -2,9 +2,24 @@ import { ImageResponse } from "next/og"
 import { readFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
+import sharp from "sharp"
 import { PORTRAIT_SRC } from "@/components/portrait"
 
 export const ogSize = { width: 1200, height: 630 }
+export const ogContentType = "image/jpeg"
+
+/**
+ * Satori renders an RGBA PNG. LinkedIn re-encodes PNGs with alpha and the
+ * preview comes out blurry, so serve an opaque, high-quality JPEG instead.
+ */
+const toJpeg = async (image: ImageResponse) => {
+  const png = Buffer.from(await image.arrayBuffer())
+  const jpeg = await sharp(png)
+    .flatten({ background: "#faf9f6" })
+    .jpeg({ quality: 92, chromaSubsampling: "4:4:4", mozjpeg: true })
+    .toBuffer()
+  return new Response(new Uint8Array(jpeg), { headers: { "content-type": ogContentType } })
+}
 
 const color = {
   paper: "#faf9f6",
@@ -55,7 +70,7 @@ const Frame = ({ children }: { children: React.ReactNode }) => (
 
 export const renderSiteOg = async () => {
   const portrait = await loadPortrait()
-  return new ImageResponse(
+  return toJpeg(new ImageResponse(
     (
       <Frame>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}>
@@ -74,11 +89,11 @@ export const renderSiteOg = async () => {
       </Frame>
     ),
     { ...ogSize, fonts: await loadFonts() },
-  )
+  ))
 }
 
 export const renderPostOg = async ({ title, date }: { title: string; date?: string }) =>
-  new ImageResponse(
+  toJpeg(new ImageResponse(
     (
       <Frame>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1 }}>
@@ -97,4 +112,4 @@ export const renderPostOg = async ({ title, date }: { title: string; date?: stri
       </Frame>
     ),
     { ...ogSize, fonts: await loadFonts() },
-  )
+  ))

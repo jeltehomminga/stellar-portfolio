@@ -1,10 +1,10 @@
 import { getAllPosts, getPostBySlug } from "@/lib/blog"
 import { formatDate } from "@/lib/format"
-import { ogSize, renderPostOg } from "@/lib/og"
+import { ogContentType, ogSize, renderPostOg } from "@/lib/og"
 
 export const alt = "Blog post by Jelte Homminga"
 export const size = ogSize
-export const contentType = "image/png"
+export const contentType = ogContentType
 
 export const generateStaticParams = () =>
   getAllPosts().map((post) => ({ slug: post.slug }))

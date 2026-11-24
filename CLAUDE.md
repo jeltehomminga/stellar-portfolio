@@ -65,7 +65,7 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 - `src/app/page.tsx` — homepage composition
 - `src/app/globals.css` — tokens, type scale, link styles, code block styles, reduced motion
 - `src/app/blog/layout.tsx` — loads Source Serif 4 + JetBrains Mono for blog routes only
-- `src/lib/og.tsx` — shared OG image renderer (site + per-post); fonts in `src/assets/fonts/`
+- `src/lib/og.tsx` — shared OG image renderer (site + per-post), converted to opaque JPEG with `sharp`; fonts in `src/assets/fonts/`
 - `src/app/opengraph-image.tsx`, `twitter-image.tsx`, `blog/[slug]/opengraph-image.tsx` — thin wrappers around `og.tsx`
 - `next.config.ts` — image formats/sizes/qualities, `inlineCss`
 - `public/images/portrait.jpg` — portrait (4:5, 280×350); used in About and the OG images
@@ -350,6 +350,7 @@ Check these before touching styles or motion. Most were caught only by Lighthous
 - **Shiki token colours:** a few GitHub-theme colours miss AA on `--paper-raised`. Shiki sets the variables inline, so override the resolved `color` with attribute selectors (see `globals.css`), not the variables.
 - **`theme-color` metas:** don't mutate the React-rendered ones, because React re-inserts them if their attributes change before hydration. An explicit theme choice adds a script-owned `#theme-color-override` meta first in `<head>`.
 - **Replacing an image: change its filename.** The Next.js/Vercel image optimizer caches resized images by URL, so overwriting `portrait.jpg` in place kept serving the old photo. Use a new name and update `PORTRAIT_SRC` in `portrait.tsx`.
+- **OG images must be opaque JPEGs.** Satori (`ImageResponse`) outputs RGBA PNGs, which LinkedIn re-encodes into a blurry preview. `og.tsx` flattens and converts them to JPEG (q92, 4:4:4) with `sharp`; route files export `contentType = ogContentType`. After changing share images, re-run LinkedIn's Post Inspector.
 - **Lighthouse locally:** best practices shows 96 because `/_vercel/insights` and `/_vercel/speed-insights` 404 outside Vercel. Not a real issue.
 
 ---
