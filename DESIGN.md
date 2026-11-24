@@ -61,7 +61,7 @@ Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS 
 | `--paper-raised` | `#f2f0eb` | `#1c1d1f` | Code blocks, photo placeholder | — |
 | `--ink` | `#1c1b19` | `#ecebe7` | Headings, body | 16.4 / 15.3 |
 | `--ink-muted` | `#63605a` | `#a3a09a` | Secondary text, descriptions | 6.0 / 7.0 |
-| `--ink-faint` | `#74706a` | `#7f7c76` | Dates, captions (on `--paper` only) | 4.7 / 4.4 |
+| `--ink-faint` | `#74706a` | `#8a8781` | Dates, captions, labels | 4.7 / 5.1 (4.7 on raised in dark) |
 | `--rule` | `#e4e1da` | `#2a2b2c` | Hairlines, borders | decorative |
 | `--accent` | `#065563` | `#7cc0ca` | Hero headline, links, focus ring, primary button, section tab | 8.0 / 8.9 |
 | `--accent-ink` | `#ffffff` | `#141516` | Text on accent | 8.4 / 8.9 |
