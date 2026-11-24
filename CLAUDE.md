@@ -68,7 +68,7 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 - `src/lib/og.tsx` — shared OG image renderer (site + per-post); fonts in `src/assets/fonts/`
 - `src/app/opengraph-image.tsx`, `twitter-image.tsx`, `blog/[slug]/opengraph-image.tsx` — thin wrappers around `og.tsx`
 - `next.config.ts` — image formats/sizes/qualities, `inlineCss`
-- `public/images/jelte.jpg` — **to add**: professional portrait, 4:5, at least 800×1000
+- `public/images/jelte.jpg` — portrait (4:5, 320×400); used in About and the OG images
 
 ---
 
@@ -350,7 +350,7 @@ floating emoji, toasts, ocean waves, hero parallax, scroll reveal, rotating OG v
 
 - [x] Blog section (MDX)
 - [x] Editorial redesign + dark mode (Nov 2026)
-- [ ] Add professional portrait at `public/images/jelte.jpg`
+- [x] Add portrait at `public/images/jelte.jpg`
 - [ ] Confirm or add outcome numbers for the School app case study
 - [ ] React Native accessibility blog post
 - [ ] Contact form (Resend or server action) — only if email proves insufficient

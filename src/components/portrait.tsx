@@ -3,7 +3,7 @@ import path from "node:path"
 import Image from "next/image"
 
 /**
- * Drop a portrait at public/images/jelte.jpg (4:5, at least 800×1000) and it
+ * Drop a portrait at public/images/jelte.jpg (4:5; currently 320×400, a larger original would sharpen OG images) and it
  * replaces the placeholder automatically, here and in the OG images.
  */
 export const PORTRAIT_SRC = "/images/jelte.jpg"
@@ -15,8 +15,8 @@ export const Portrait = ({ className = "" }: { className?: string }) =>
     <Image
       src={PORTRAIT_SRC}
       alt="Jelte Homminga"
-      width={800}
-      height={1000}
+      width={320}
+      height={400}
       sizes="160px"
       quality={75}
       className={`aspect-[4/5] w-full rounded-[var(--radius)] object-cover ${className}`}
