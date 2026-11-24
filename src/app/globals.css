@@ -34,7 +34,7 @@
     --paper-raised: #1c1d1f;
     --ink: #ecebe7;
     --ink-muted: #a3a09a;
-    --ink-faint: #7f7c76;
+    --ink-faint: #8a8781;
     --rule: #2a2b2c;
     --accent: #7cc0ca;
     --accent-ink: #141516;
@@ -49,7 +49,7 @@
   --paper-raised: #1c1d1f;
   --ink: #ecebe7;
   --ink-muted: #a3a09a;
-  --ink-faint: #7f7c76;
+  --ink-faint: #8a8781;
   --rule: #2a2b2c;
   --accent: #7cc0ca;
   --accent-ink: #141516;
@@ -279,8 +279,9 @@
   background-size: 0% 1px;
   transition: background-size 300ms var(--ease-out);
 }
+/* The <li> is the group but the link inside it takes focus, so match on :has(). */
 .group:hover .grow-underline,
-.group:focus-visible .grow-underline {
+.group:has(:focus-visible) .grow-underline {
   background-size: 100% 1px;
 }
 

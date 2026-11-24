@@ -26,7 +26,7 @@ export const PostList = ({ posts, headingLevel: Heading = "h3" }: PostListProps)
             {/* The ::after stretches the link over the whole row for a larger target. */}
             <Link
               href={`/blog/${post.slug}`}
-              className="text-ink no-underline after:absolute after:inset-0 focus-visible:outline-none"
+              className="text-ink no-underline after:absolute after:inset-0"
             >
               <ViewTransition name={postTitleTransition(post.slug)}>
                 <span className="grow-underline">{post.title}</span>
