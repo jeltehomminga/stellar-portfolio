@@ -17,7 +17,7 @@
 
 **Live at [stellar-web.dev](https://stellar-web.dev)**, deployed on Vercel (project `stellar-portfolio`, team `jeltehommingas-projects`).
 
-Redesigned in Nov 2026 from the "Tropical" theme to a quiet editorial design (branch `redesign/editorial`).
+Redesigned in Nov 2026 from the "Tropical" theme to a quiet editorial design: shipped in PR #4, with fixes from Copilot's review of #4 in PR #5 (dark-mode faint-text contrast, keyboard focus on post links).
 The design system lives in **`DESIGN.md`**; read it before changing anything visual.
 
 Lighthouse after the redesign (local production build, Lighthouse 13.6):
@@ -257,6 +257,16 @@ const lilitaOne = Lilita_One({
 })
 ```
 
+### Phase 5: The Editorial Redesign (Nov 2026)
+
+**Tool**: Claude Code (cloud session), driven from the phone and the Claude app.
+
+- **Critique first:** a written critique of the tropical site (rounded fonts, caricature, 72 emoji, one `h2` on the whole page, three AA contrast failures).
+- **Design decided before code:** a `DESIGN.md`, and a type specimen of three pairings shown before building; Jelte picked Schibsted Grotesk + Source Serif 4.
+- **Built section by section:** Lighthouse was measured before and after on the same machine. Mobile home went 47 → 100, CLS 0.312 → 0.
+- **Human feedback changed real things:** "it lacks colour" led to the project hues and motion; "red looks like an error state" moved the outcome tint to teal; "I also built the new app" reshaped the My Luminus case study.
+- **AI reviewing AI:** Copilot's review of PR #4 caught two accessibility bugs Claude Code had shipped (a 4.39:1 contrast rounded up to a pass, and invisible keyboard focus on post links). Both were fixed in PR #5. Worth a paragraph in the blog post: automated review is a useful second pair of eyes even on AI-written code.
+
 ---
 
 ## Blog Post Outline (Planned)
@@ -320,11 +330,26 @@ Senior frontend and mobile engineer for teams shipping Next.js and React Native 
 Full spec in **`DESIGN.md`**. Summary:
 
 - **Type**: Schibsted Grotesk (headings, UI, homepage body), Source Serif 4 (blog prose), JetBrains Mono (code only).
-- **Colour**: warm paper `#faf9f6`, ink `#1c1b19`, greys, one teal accent `#065563` (hero headline, links, section tabs). Three project hues from the old palette (sunset, palm, ocean) appear only as small markers by case-study titles; Outcome rows use the teal accent tint (a warm tint read as an error state). Palm also marks availability. Dark mode follows the OS until the visitor uses the header toggle (stored in `localStorage`, applied before paint by an inline script in `layout.tsx`); all text pairs pass WCAG AA.
+- **Colour**: warm paper `#faf9f6`, ink `#1c1b19`, greys, one teal accent `#065563` (hero headline, links, section tabs). Three project hues from the old palette (sunset, palm, ocean) appear only as small markers by case-study titles; Outcome rows use the teal accent tint (a warm tint read as an error state). Palm also marks availability. Dark mode follows the OS until the visitor uses the header toggle (stored in `localStorage`, applied before paint by an inline script in `layout.tsx`); all text pairs pass WCAG AA on every surface they appear on (dark `--ink-faint` is `#8a8781`: 5.1:1 on paper, 4.7:1 on raised).
+- **Focus**: every interactive element shows the global 2px accent `:focus-visible` outline. Never remove it; post links also grow their underline on focus via `.group:has(:focus-visible)`.
 - **Layout**: single column, left-aligned, 42rem max; 7.5rem date/label column on lists from 640px up.
 - **Shape**: one 6px radius, 1px hairlines, no shadows, no cards.
 - **Motion** (all CSS): staggered hero entrance, a status-dot ring, scroll-driven section tabs and content reveals, underline-grow hovers, and React `<ViewTransition>` title morphs between the post list and posts (`experimental.viewTransition`). Everything off under `prefers-reduced-motion`.
 - **Don't**: emoji, gradients, purple, hover lift, floating/bobbing elements, all-caps eyebrows, mono labels, caricatures.
+
+---
+
+## Gotchas (learned the hard way)
+
+Check these before touching styles or motion. Most were caught only by Lighthouse or Copilot's review.
+
+- **Contrast: never round up.** Dark `--ink-faint` measured 4.39:1, was written down as "4.4" and treated as passing; Copilot flagged it (fixed in #5). Check each text colour against every surface it sits on (`--paper`, `--paper-raised`, `--accent-soft`), not just the page background.
+- **Focus: never put `focus-visible:outline-none` on a link** whose focus styling lives on a non-focusable parent. `.group:focus-visible` on an `<li>` never matches, so focus was invisible on post lists (fixed in #5). Keep the outline and use `.group:has(:focus-visible)` for extra effects.
+- **Scroll reveals animate transform only, never opacity.** Text at the fold edge was left semi-transparent and failed contrast.
+- **Scroll-driven animations must be written as longhands.** Lightning CSS (Tailwind's minifier) folds them into an `animation` shorthand containing `view()`, which browsers drop entirely.
+- **Shiki token colours:** a few GitHub-theme colours miss AA on `--paper-raised`. Shiki sets the variables inline, so override the resolved `color` with attribute selectors (see `globals.css`), not the variables.
+- **`theme-color` metas:** don't mutate the React-rendered ones, because React re-inserts them if their attributes change before hydration. An explicit theme choice adds a script-owned `#theme-color-override` meta first in `<head>`.
+- **Lighthouse locally:** best practices shows 96 because `/_vercel/insights` and `/_vercel/speed-insights` 404 outside Vercel. Not a real issue.
 
 ---
 
@@ -357,7 +382,7 @@ floating emoji, toasts, ocean waves, hero parallax, scroll reveal, rotating OG v
 
 ### Nice to have
 
-- [ ] Page transitions (View Transitions API)
+- [x] Page transitions (React `<ViewTransition>`: post titles morph between list and article)
 - [ ] RSS feed for the blog
 
 ---
