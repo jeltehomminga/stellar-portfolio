@@ -1,25 +1,21 @@
-import { Navigation } from "@/components/navigation"
+import { SiteHeader } from "@/components/site-header"
 import { Hero } from "@/components/hero"
-import { About } from "@/components/about"
-import { TechStack } from "@/components/tech-stack"
-import { Philosophy } from "@/components/philosophy"
-import { Projects } from "@/components/projects"
-import { Now } from "@/components/now"
+import { Work } from "@/components/work"
+import { Writing } from "@/components/writing"
 import { Experience } from "@/components/experience"
+import { About } from "@/components/about"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
 
 const Home = () => (
   <>
-    <Navigation />
-    <main>
+    <SiteHeader />
+    <main id="main" className="mx-auto max-w-[42rem] px-6 sm:px-8">
       <Hero />
-      <About />
-      <TechStack />
-      <Philosophy />
-      <Projects />
-      <Now />
+      <Work />
+      <Writing />
       <Experience />
+      <About />
       <Contact />
     </main>
     <Footer />

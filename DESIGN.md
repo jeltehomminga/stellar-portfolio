@@ -1,0 +1,184 @@
+# stellar-web.dev — Design System (Editorial)
+
+Status: **in use** (Nov 2026). Replaces the Tropical theme. Pairing C chosen.
+
+## 1. Brief in one line
+
+A freelance senior frontend & mobile engineer's site that reads like a well-kept notebook: quiet,
+specific, and fast. The work and the writing are the decoration.
+
+- **Audience:** engineering managers, CTOs and agency leads hiring a senior contractor; developers arriving from a blog post.
+- **Primary job:** in 10 seconds, show who Jelte is, what he's shipped, and how to reach him. Then let the case studies and posts do the convincing.
+- **Positioning:** Senior Frontend & Mobile Engineer (Next.js, React Native, Expo). AI is how he works (Claude Code, agents), not a product feature he sells. Never claim shipped AI features.
+- **References:** leerob.com, paco.me. Single column, generous whitespace, type-led.
+
+## 2. Typography
+
+| Role | Face | Loaded |
+| --- | --- | --- |
+| Headings, UI, homepage body | Schibsted Grotesk (variable) | Root layout, preloaded |
+| Blog prose | Source Serif 4 (variable, with italic) | Blog layout only |
+| Code | JetBrains Mono | Blog layout only, not preloaded |
+
+Pairing C from the specimen round (A: Newsreader + IBM Plex Sans, B: Instrument Sans throughout).
+The homepage reads crisp and engineered; posts read like a publication.
+
+All loaded through `next/font` with `display: "swap"` and `adjustFontFallback: true` (keeps CLS at 0,
+same as today). Only the weights we use are loaded. OG images embed static Schibsted Grotesk TTFs from `src/assets/fonts/`.
+
+### Scale
+
+Base 16px. Steps follow a ~1.25 ratio; display uses `clamp()`.
+
+| Token | Size / line-height | Weight | Use |
+| --- | --- | --- | --- |
+| `display` | clamp(2.125rem, 1.6rem + 2.4vw, 2.75rem) / 1.1 | heading weight | Hero H1 only |
+| `title` | clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem) / 1.2 | heading weight | Blog post H1 |
+| `h2` | 1.5rem / 1.25 | heading weight | Section headings, prose H2 |
+| `h3` | 1.125rem / 1.4 | 600 | Case study titles, post titles in lists, prose H3 |
+| `body` | 1.0625rem (17px) / 1.65 | 400 | Homepage body |
+| `prose` | 1.1875rem (19px) / 1.7 serif, or 17px / 1.7 sans | 400 | Blog post body |
+| `small` | 0.875rem / 1.5 | 400 | Dates, captions, meta |
+| `code` | 0.875rem / 1.6 | 400 | Code blocks; inline code 0.88em |
+
+Rules
+- Heading tracking: −0.02em at display/title, −0.01em at h2. Body: 0.
+- `text-wrap: balance` on headings, `text-wrap: pretty` on paragraphs.
+- Numbers in dates and year ranges use `font-variant-numeric: tabular-nums` (in the body face, not mono).
+- Measure: homepage text ≤ 62ch, blog prose 65ch.
+- Sentence case everywhere. No all-caps labels, no eyebrows above headings.
+
+## 3. Colour
+
+Near-monochrome, one accent derived from the old `--ocean-deep`. Defined as CSS custom properties on
+`:root` in `globals.css`. Dark tokens apply under `[data-theme="dark"]`, or under `prefers-color-scheme: dark` unless `[data-theme="light"]` is set.
+
+**Theme toggle** (sun/moon button in the header): first visit follows the OS. Choosing the other theme stores it in `localStorage` and sets `data-theme` on `<html>`; choosing the OS theme again clears the override. An inline script in `<head>` applies the stored choice before first paint, so there is no flash. The browser chrome follows too: React owns two media-query `theme-color` metas, and an explicit choice adds a script-owned `#theme-color-override` meta first in `<head>` (never mutate React's metas: it re-inserts them if their attributes change before hydration). Without JS the OS preference still applies. The switch cross-fades via `startViewTransition` (skipped under reduced motion).
+
+| Token | Light | Dark | Use | Contrast on paper (L / D) |
+| --- | --- | --- | --- | --- |
+| `--paper` | `#faf9f6` | `#141516` | Page background (faint warm nod to the old sand) | — |
+| `--paper-raised` | `#f2f0eb` | `#1c1d1f` | Code blocks, photo placeholder | — |
+| `--ink` | `#1c1b19` | `#ecebe7` | Headings, body | 16.4 / 15.3 |
+| `--ink-muted` | `#63605a` | `#a3a09a` | Secondary text, descriptions | 6.0 / 7.0 |
+| `--ink-faint` | `#74706a` | `#7f7c76` | Dates, captions (on `--paper` only) | 4.7 / 4.4 |
+| `--rule` | `#e4e1da` | `#2a2b2c` | Hairlines, borders | decorative |
+| `--accent` | `#065563` | `#7cc0ca` | Hero headline, links, focus ring, primary button, section tab | 8.0 / 8.9 |
+| `--accent-ink` | `#ffffff` | `#141516` | Text on accent | 8.4 / 8.9 |
+| `--accent-soft` | accent 7% on paper | accent 9% on paper | Outcome rows, portrait placeholder | — |
+| `--hue-sunset` | `#e8622c` | `#ff8a5c` | Project hue: My Luminus | marker only |
+| `--hue-palm` | `#2f8a52` | `#5cc07f` | Project hue: School app; availability dot | marker only |
+| `--hue-ocean` | `#0c8a9e` | `#3cc0d4` | Project hue: CourtScout | marker only |
+
+All text pairs pass WCAG AA (≥ 4.5:1).
+
+Colour always carries meaning:
+- **Teal accent** = the voice of the site: the hero headline, everything interactive, and the short tab on each section rule.
+- **Project hues** (nods to the old tropical sunset / palm / ocean) identify a case study: a small square by its title, nothing more. Never used for text or tinted panels: a warm tint with a coloured left border reads as an error or warning.
+- **Outcome rows** use the accent: `--accent-soft` background with a 2px teal left border, the same for every project.
+- **Palm green** also marks availability (the status dot).
+- No other colours. Body text stays ink and muted grey.
+
+## 4. Layout & spacing
+
+- Single column, left-aligned, `max-width: 42rem` (672px) content; blog prose at 65ch.
+- Page gutter: 24px mobile, 32px ≥ 640px.
+- Spacing scale (px): 4, 8, 12, 16, 24, 32, 48, 64, 96.
+- Section rhythm: 96px between sections on desktop, 64px on mobile. Each section opens with an `h2`
+  sitting on a 1px `--rule` hairline.
+- Experience and Writing lists use a two-column row (date | content) from 640px up, stacked below.
+
+```
+Jelte Homminga                              Work  Writing  About
+──────────────────────────────────────────────────────────────
+Senior frontend and mobile engineer for
+teams shipping Next.js and React Native…    ← display H1
+Two sentences of proof.                     ← ink-muted
+Open to new freelance projects.             ← availability
+[Email me]  LinkedIn                        ← one solid button + text link
+
+── Selected work ────────────────────
+My Luminus
+  Problem    …
+  What I did …
+  Outcome    …
+
+── Writing ──────────────────────────
+Jul 2026   You might not need an MCP
+Jun 2026   Stop screenshotting Figma
+
+── Experience ───────────────────────
+2025–now   Freelance · Stellar Web Development
+2021–2025  Frontend developer · Luminus
+
+── About ────────────────────────────
+[photo]  Short bio. One personality line.
+```
+
+## 5. Radius, borders, elevation
+
+- One radius: `6px` for code blocks, images, buttons, the photo. Layout has no radius.
+- Borders are 1px `--rule`. No shadows anywhere, no cards around content.
+
+## 6. Motion
+
+All CSS, no animation library, nothing that blocks paint or shifts layout (transform + opacity only).
+Easing: `--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1)`.
+
+| Moment | What moves | Timing |
+| --- | --- | --- |
+| Page load | Hero blocks rise 10px and fade in, staggered (`.rise-in` + `--i`) | 600ms, 90ms stagger |
+| Availability | Green dot sends out a ring three times, then rests | 1.6s × 3, starts at 900ms |
+| Scroll | Section tab draws in from the left; case studies, posts and roles glide up 20px, transform only, never opacity (`.reveal`) | Scroll-driven (`animation-timeline: view()`); reveals finish within the first 96px of entry |
+| Hover / focus | Post title underline grows left to right; date turns accent; links thicken underline; button darkens | 150–300ms |
+| Theme switch | Whole page cross-fades between themes (`startViewTransition`) | 220ms |
+| Navigation | Post titles morph between list and article (React `<ViewTransition>`); the rest cross-fades | 380ms / 220ms |
+
+Rules
+- Scroll reveals never touch opacity: text crossing the fold would be semi-transparent and fail contrast.
+- Scroll-driven animations sit behind `@supports (animation-timeline: view())`; other browsers just show the content.
+- Write scroll-driven animations as longhands: Lightning CSS otherwise merges them into an `animation` shorthand containing `view()`, which browsers drop.
+- `prefers-reduced-motion: reduce` turns all of it off, including view transitions and the status ring.
+- No hover lift, scale or rotate. No looping motion.
+
+## 7. Components
+
+- **Links:** inline links in `--accent` with an underline (1px, offset 3px). On hover the underline
+  thickens. Nav links are `--ink-muted`, `--ink` on hover and when current (`aria-current`).
+- **Buttons:** at most one solid button per view (accent bg, `--accent-ink` text, 6px radius,
+  40px min height). Everything else is a text link. No gradients, no pills, no arrows appended.
+- **Focus:** `outline: 2px solid var(--accent); outline-offset: 3px` on every interactive element, via `:focus-visible`.
+- **Case study:** `h3` title + optional one-line context, then a definition list with Problem / What I
+  did / Outcome. Optional link to the live product or a post.
+- **Post list item:** date (small, faint, tabular) + title (h3 weight) + optional one-line description.
+- **Code blocks:** highlighted at build time by Shiki (`rehype-pretty-code`, github-light / github-dark-dimmed), `--paper-raised` bg, 1px `--rule` border, 6px radius, horizontal scroll, no line wrap. Three Shiki token colours are overridden in `globals.css` to pass AA.
+- **Images in posts:** full prose width, 6px radius, optional `<figcaption>` in small/faint below.
+- **Photo:** real portrait, 4:5, neutral background, at `public/images/jelte.jpg`. Until that file exists, About shows a `--paper-raised` block with initials and the OG image omits the photo; both switch automatically at build time.
+- **Headings are real headings:** one `h1` per page, `h2` per section, `h3` per item.
+
+## 8. Voice
+
+- Plain, specific, first person. Verbs and outcomes over adjectives.
+- Name technologies inside sentences ("moved the app to Expo with EAS Build") rather than in badge walls.
+- AI appears as how the work gets done (Claude Code, agents), backed by the blog. Not as a selling adjective.
+- One or two personal lines in About (Bali, padel). No jokes in headings.
+
+## 9. Don't
+
+- No emoji anywhere in UI copy. No icons as decoration.
+- No Lilita One, Nunito, Inter, Roboto, Geist, or any rounded display face.
+- No purple, no gradients (text, buttons or backgrounds). Project hues are markers, never a second accent.
+- No cards with hover lift, no shadows, no glassmorphism.
+- No floating/bobbing badges, toasts, waves or parallax. Motion follows the table in §6 and nothing else.
+- No rotated images, no caricature or illustrated self-portraits.
+- No all-caps eyebrows, no numbered markers unless the content is a sequence, no "→" on every link.
+- No mono font for dates or labels. Mono is for code.
+- No "passionate", "love coding", "AI-powered" or other generic freelancer language.
+- Don't claim AI features shipped to users.
+
+## 10. Kept from the old site
+
+- Konami code → padel-ball cursor trail (hidden, lazy-loaded, no hints in the UI).
+- Console banner, rewritten without emoji.
+- Server Components everywhere; client JS only for the nav menu and the easter egg.
+- `next/font` swap + `adjustFontFallback`, image config, `inlineCss`.

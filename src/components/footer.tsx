@@ -1,27 +1,22 @@
+const links = [
+  { href: "mailto:stellarweb.bali@gmail.com", label: "Email" },
+  { href: "https://www.linkedin.com/in/jeltehomminga", label: "LinkedIn" },
+  { href: "https://github.com/jeltehomminga", label: "GitHub" },
+]
+
 export const Footer = () => (
-  <footer className="relative z-[5] border-t-[1.5px] border-border bg-sand-warm px-8 py-6 pb-20 text-center text-[0.75rem] text-text-mid">
-    <p>
-      Built with ☕, 🤖, and 🥥 in Bali · © {new Date().getFullYear()} Stellar
-      Web Development
-    </p>
-    <p className="mt-1">
-      <a
-        href="https://github.com/jeltehomminga"
-        className="font-bold text-ocean no-underline hover:underline"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        GitHub
-      </a>
-      {" · "}
-      <a
-        href="https://linkedin.com/in/jeltehomminga"
-        className="font-bold text-ocean no-underline hover:underline"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn
-      </a>
-    </p>
+  <footer className="mx-auto mt-24 max-w-[42rem] px-6 pb-12 sm:px-8">
+    <div className="flex flex-col gap-3 border-t border-rule pt-6 text-small text-ink-faint sm:flex-row sm:justify-between">
+      <p>© {new Date().getFullYear()} Stellar Web Development</p>
+      <ul className="flex gap-5">
+        {links.map((link) => (
+          <li key={link.label}>
+            <a href={link.href} className="link-quiet">
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </footer>
 )

@@ -6,11 +6,11 @@ export const CursorTrail = () => {
   const trailRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    let sequence: number[] = []
-    const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
+    const sequence: string[] = []
+    const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"]
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      sequence.push(event.keyCode)
+      sequence.push(event.key.length === 1 ? event.key.toLowerCase() : event.key)
       if (sequence.length > 10) sequence.shift()
       if (sequence.toString() === konami.toString()) {
         document.body.classList.toggle("trail-active")

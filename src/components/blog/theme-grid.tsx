@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { Caption } from "./caption"
 
 const themes = [
   {
@@ -20,7 +21,7 @@ export const ThemeGrid = () => (
     <div className="grid grid-cols-3 gap-3">
       {themes.map((theme) => (
         <div key={theme.label} className="flex flex-col gap-1.5">
-          <div className="relative aspect-[2252/1532] overflow-hidden rounded-xl shadow-md">
+          <div className="relative aspect-[2252/1532] overflow-hidden rounded-[var(--radius)] border border-rule">
             <Image
               src={theme.src}
               alt={`${theme.label} theme concept`}
@@ -29,14 +30,12 @@ export const ThemeGrid = () => (
               sizes="(max-width: 768px) 33vw, 240px"
             />
           </div>
-          <span className="text-center text-xs font-bold text-text-mid">
+          <span className="font-sans text-small text-ink-faint">
             {theme.label}
           </span>
         </div>
       ))}
     </div>
-    <figcaption className="mt-2 text-center text-sm text-text-mid italic">
-      The three theme concepts generated from Claude chat
-    </figcaption>
+    <Caption>The three theme concepts generated from Claude chat</Caption>
   </figure>
 )
