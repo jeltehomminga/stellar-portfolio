@@ -48,7 +48,7 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 | `post-list.tsx` | Server | Date + title + description rows (homepage and `/blog`) |
 | `experience.tsx` | Server | Compact career list |
 | `about.tsx` | Server | Portrait + bio + personality line + tools as plain text |
-| `portrait.tsx` | Server | Renders `public/images/jelte.jpg` if present, else an initials placeholder |
+| `portrait.tsx` | Server | Renders `public/images/portrait.jpg` (`PORTRAIT_SRC`) if present, else an initials placeholder |
 | `contact.tsx` | Server | Email, LinkedIn, GitHub |
 | `footer.tsx` | Server | Copyright line + links |
 | `app/not-found.tsx` | Server | Styled 404 with header, footer and links to work and writing |
@@ -68,7 +68,7 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 - `src/lib/og.tsx` — shared OG image renderer (site + per-post); fonts in `src/assets/fonts/`
 - `src/app/opengraph-image.tsx`, `twitter-image.tsx`, `blog/[slug]/opengraph-image.tsx` — thin wrappers around `og.tsx`
 - `next.config.ts` — image formats/sizes/qualities, `inlineCss`
-- `public/images/jelte.jpg` — portrait (4:5, 320×400); used in About and the OG images
+- `public/images/portrait.jpg` — portrait (4:5, 280×350); used in About and the OG images
 
 ---
 
@@ -349,6 +349,7 @@ Check these before touching styles or motion. Most were caught only by Lighthous
 - **Scroll-driven animations must be written as longhands.** Lightning CSS (Tailwind's minifier) folds them into an `animation` shorthand containing `view()`, which browsers drop entirely.
 - **Shiki token colours:** a few GitHub-theme colours miss AA on `--paper-raised`. Shiki sets the variables inline, so override the resolved `color` with attribute selectors (see `globals.css`), not the variables.
 - **`theme-color` metas:** don't mutate the React-rendered ones, because React re-inserts them if their attributes change before hydration. An explicit theme choice adds a script-owned `#theme-color-override` meta first in `<head>`.
+- **Replacing an image: change its filename.** The Next.js/Vercel image optimizer caches resized images by URL, so overwriting `portrait.jpg` in place kept serving the old photo. Use a new name and update `PORTRAIT_SRC` in `portrait.tsx`.
 - **Lighthouse locally:** best practices shows 96 because `/_vercel/insights` and `/_vercel/speed-insights` 404 outside Vercel. Not a real issue.
 
 ---
@@ -375,7 +376,7 @@ floating emoji, toasts, ocean waves, hero parallax, scroll reveal, rotating OG v
 
 - [x] Blog section (MDX)
 - [x] Editorial redesign + dark mode (Nov 2026)
-- [x] Add portrait at `public/images/jelte.jpg`
+- [x] Add portrait at `public/images/portrait.jpg`
 - [ ] Confirm or add outcome numbers for the School app case study
 - [ ] React Native accessibility blog post
 - [ ] Contact form (Resend or server action) — only if email proves insufficient

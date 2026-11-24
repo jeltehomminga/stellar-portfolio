@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og"
 import { readFile } from "node:fs/promises"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
+import { PORTRAIT_SRC } from "@/components/portrait"
 
 export const ogSize = { width: 1200, height: 630 }
 
@@ -28,7 +29,7 @@ const loadFonts = async () => {
 
 // Satori reads image types from magic bytes poorly; pass an explicit data URL.
 const loadPortrait = async () => {
-  const file = join(process.cwd(), "public/images/jelte.jpg")
+  const file = join(process.cwd(), "public", PORTRAIT_SRC)
   if (!existsSync(file)) return null
   const buffer = await readFile(file)
   const mime = buffer[0] === 0x89 && buffer[1] === 0x50 ? "image/png" : "image/jpeg"
