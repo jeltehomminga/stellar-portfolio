@@ -153,7 +153,7 @@ Rules
 - **Post list item:** date (small, faint, tabular) + title (h3 weight) + optional one-line description.
 - **Code blocks:** highlighted at build time by Shiki (`rehype-pretty-code`, github-light / github-dark-dimmed), `--paper-raised` bg, 1px `--rule` border, 6px radius, horizontal scroll, no line wrap. Three Shiki token colours are overridden in `globals.css` to pass AA.
 - **Images in posts:** full prose width, 6px radius, optional `<figcaption>` in small/faint below.
-- **Photo:** real portrait, 4:5, neutral background, at `public/images/jelte.jpg`. Until that file exists, About shows a `--paper-raised` block with initials and the OG image omits the photo; both switch automatically at build time.
+- **Photo:** real portrait, 4:5, neutral background, at `public/images/portrait.jpg` (`PORTRAIT_SRC`; use a new filename when replacing it, as the image cache is keyed by URL). Until that file exists, About shows a `--paper-raised` block with initials and the OG image omits the photo; both switch automatically at build time.
 - **Headings are real headings:** one `h1` per page, `h2` per section, `h3` per item.
 
 ## 8. Voice
