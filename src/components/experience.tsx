@@ -5,13 +5,13 @@ const roles = [
     period: "2025 – now",
     role: "Freelance frontend & mobile engineer",
     org: "Stellar Web Development, Bali",
-    note: "Consulting for Luminus via Talent-IT on the My Luminus web portal and Expo app. Next.js and React Native work for other clients.",
+    note: "Consulting for Luminus via Talent-IT: building the redesigned My Luminus app in Expo, alongside the web portal. Next.js and React Native work for other clients.",
   },
   {
     period: "2021 – 2025",
     role: "Frontend developer",
     org: "Luminus via Frontmen, Brussels",
-    note: "My Luminus: web portal, component library and accessibility, Cypress and Testing Library suites, Next.js boilerplates.",
+    note: "My Luminus web portal and the existing mobile app: component library, accessibility, Cypress and Testing Library suites, Next.js boilerplates.",
   },
   {
     period: "2020 – 2021",

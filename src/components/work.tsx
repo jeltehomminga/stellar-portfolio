@@ -21,7 +21,7 @@ const caseStudies: CaseStudy[] = [
     problem:
       "Customers manage their energy contracts and invoices on the web and in the app, with one shared login. Both have to stay fast under production traffic, keep sessions in sync and work for everyone, including people using assistive technology.",
     approach: [
-      "Mobile app: built the redesigned My Luminus app on a modern Expo and React Native stack.",
+      "Mobile app: worked on the existing My Luminus app, then built its redesign as a new Expo app.",
       "Web portal: dual-layer caching (HTTP and Redis, with TanStack Query on the client), server rendering with the Next.js App Router, and Auth0 sessions shared across apps.",
       "Accessibility: hands-on work across the web portal, the shared component library and the new app.",
       "Foundations: the Storybook component library and the Next.js boilerplate new apps start from.",

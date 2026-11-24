@@ -305,7 +305,7 @@ Senior frontend and mobile engineer for teams shipping Next.js and React Native 
 ### Messaging rules
 
 - **DO**: lead with shipped work and outcomes (My Luminus web and Expo app, the Expo migration, CourtScout).
-- **DO**: give My Luminus full credit: Jelte built the redesigned My Luminus app with Expo and did accessibility work on the web portal, the component library and the app.
+- **DO**: give My Luminus full credit: Jelte worked on the existing My Luminus app (2021–2025), then built its redesign as a new Expo app (2025–now, via Talent-IT), and did accessibility work on the web portal, the component library and the app.
 - **DO**: name specific technical decisions in sentences (dual-layer caching, Auth0 sessions across apps, EAS fingerprinting).
 - **DO**: let the blog prove the AI-first workflow; mention it plainly, once, in the hero and About.
 - **DON'T**: claim AI features shipped to users. Never.
