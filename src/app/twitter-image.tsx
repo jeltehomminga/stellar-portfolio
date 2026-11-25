@@ -1,8 +1,8 @@
-import { ogSize, renderSiteOg } from "@/lib/og"
+import { ogContentType, ogSize, renderSiteOg } from "@/lib/og"
 
 export const alt = "Jelte Homminga, Senior Frontend & Mobile Engineer"
 export const size = ogSize
-export const contentType = "image/png"
+export const contentType = ogContentType
 
 const Image = () => renderSiteOg()
 
