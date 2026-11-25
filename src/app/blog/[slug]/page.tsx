@@ -9,6 +9,7 @@ import rehypePrettyCode from "rehype-pretty-code"
 import { getAllPosts, getPostBySlug, getReadingTime } from "@/lib/blog"
 import { formatDate } from "@/lib/format"
 import { postTitleTransition } from "@/components/post-list"
+import { PostPager } from "@/components/post-pager"
 import { mdxComponents } from "@/components/blog/mdx-components"
 
 type BlogPostPageProps = {
@@ -115,9 +116,12 @@ const BlogPostPage = async ({ params }: BlogPostPageProps) => {
           />
         </div>
         <footer className="mt-16 border-t border-rule pt-6 font-sans">
-          <Link href="/blog" className="link">
-            All posts
-          </Link>
+          <PostPager slug={slug} />
+          <p className="mt-8">
+            <Link href="/blog" className="link">
+              All posts
+            </Link>
+          </p>
         </footer>
       </article>
     </>
