@@ -76,6 +76,7 @@ export const mdxComponents: MDXComponents = {
   th: (props) => <th className="border-b border-ink-faint px-3 py-2 text-left font-semibold" {...props} />,
   td: (props) => <td className="border-b border-rule px-3 py-2 align-top" {...props} />,
   img: BlogImage as MDXComponents["img"],
+  Caption,
   ThemeGrid,
   LighthouseComparison,
   VideoClip,

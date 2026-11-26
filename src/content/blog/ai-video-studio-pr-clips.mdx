@@ -35,7 +35,10 @@ That's the kind of work an agent is good at, as long as it has a procedure and a
 
 ## How it's set up
 
-![The pipeline: pull request, facts, inventory, worktrees, capture, props.json, timeline, render, checks, a human yes](/images/blog/video-studio-pipeline.svg "From pull request to clip. Everything left of the human yes is the agent's.")
+<figure className="my-8">
+  <Image src="/images/blog/video-studio-pipeline.svg" alt="The pipeline: pull request, facts, inventory, worktrees, capture, props.json, timeline, render, checks, a human yes" width="1200" height="540" />
+  <Caption>From pull request to clip. Everything left of the human yes is the agent's.</Caption>
+</figure>
 
 **1. Facts, read-only.** From `gh` and git: the before and after commits, and the facts for the end card. Only facts that can't go stale, because a clip is usually made while the PR is still open.
 
@@ -137,7 +140,7 @@ A few decisions made it work:
 - **It refuses to leak.** Before writing, a guard checks every value against a list of identifier patterns (emails, account numbers, anything you add) and stops the render if one appears in full.
 - **A hint under the clip.** When I post a clip, a small line under it says the mp4 holds JSON for agents and gives the ffprobe command. Without that line, no agent would think to look.
 
-Try it on the clip at the top of this post: download it from the player's menu and run the command above.
+Try it on the clip at the top of this post: <a href="/videos/pr-clip-portfolio-9.mp4" download className="link">download it</a> and run the command above.
 
 Two problems are still open. Some MCP servers can list an attachment but can't download it, so an agent needs a plain API call with the user's token to get the file. And there's no shared convention for this, so for now only agents that are told to look will find the notes. Proper mp4 chapter markers would be a good next step.
 
