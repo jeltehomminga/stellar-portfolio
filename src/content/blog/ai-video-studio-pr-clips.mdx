@@ -1,0 +1,175 @@
+---
+title: "I Let an AI Agent Film My Pull Requests"
+date: "2026-11-26"
+description: "A local Remotion studio that an agent drives: give it a pull request, get a before/after clip with captions read aloud, every state the change built, and notes for other people's AI agents hidden inside the mp4."
+author: "Jelte Homminga"
+tags: ["ai", "claude", "remotion", "video", "code-review", "developer-tools"]
+featured: false
+---
+
+# I Let an AI Agent Film My Pull Requests
+
+Most reviewers never check out the branch. They read the diff, look at a screenshot if there is one, and approve. For a UI change that's a guess: a screenshot can't show a transition, a hover, a drag, or the state you only reach after three taps.
+
+So I built a small video studio that an agent runs. I give it a pull request, and it comes back with a clip: the old screen and the new one, the change marked, every state the PR built, captions read aloud by a local voice, and an end card with the PR's facts. This is the clip it made of a change to this very blog, the "Older" and "Newer" links at the end of this post:
+
+<VideoClip src="/videos/pr-clip-portfolio-9.mp4" poster="/videos/pr-clip-portfolio-9.jpg" caption="A real pull request on this site, filmed by the agent: before, after, a recorded click, the edge cases, dark mode, tablet and phone. 37 seconds." />
+
+Everything in this post was filmed for this post: a real pull request on this site, a made-up app, and this site's November release.
+
+## What the studio makes
+
+It started as a Sunday side project and grew from there. It makes two kinds of film.
+
+**Pull request clips.** The workhorse. A web change is shown as one browser window that wipes from before to after. An app change is two phones side by side. Thin corner brackets mark the problem (coral) and the fix (teal), and the camera leans in once the new state has landed. Then come the states the PR added (empty, error, loading, the edge cases), the looks (dark mode, a second language, tablet and phone) and an end card with a QR code to the PR or its issue. 15 to 60 seconds.
+
+<VideoClip src="/videos/pr-clip-pothos-1.mp4" poster="/videos/pr-clip-pothos-1.jpg" caption="An app clip of a made-up plant app: two phones, a recorded tap on each Watered button, then light, dark and Dutch." />
+
+**Release showcases.** Music only, cut to the beat, made for a sprint demo where someone talks over it. More on those below.
+
+## Why an agent
+
+Making one clip is about twenty steps: read the PR, work out every state it built, build both versions, capture each state the same way on both sides, measure where the change sits on screen, write captions, record the voice, render, check the result. None of it is hard. All of it is tedious, and every step has a way to go subtly wrong: a different scroll position on the before side, a debug overlay in one frame, a caption that no longer matches what the voice says.
+
+That's the kind of work an agent is good at, as long as it has a procedure and a way to check itself. The studio is a [Claude Code](https://www.anthropic.com/claude-code) skill (a procedure in markdown) plus a Remotion project full of scripts and checks. A clip takes the agent between 23 and 40 minutes. Rendering and checking is 2 to 4 of those; capturing is the slow part.
+
+## How it's set up
+
+![The pipeline: pull request, facts, inventory, worktrees, capture, props.json, timeline, render, checks, a human yes](/images/blog/video-studio-pipeline.svg "From pull request to clip. Everything left of the human yes is the agent's.")
+
+**1. Facts, read-only.** From `gh` and git: the before and after commits, and the facts for the end card. Only facts that can't go stale, because a clip is usually made while the PR is still open.
+
+**2. Inventory.** A subagent reads the diff, the PR description, the issue and the designs, and lists every state the PR built: how to reach it, and in or out with a reason. That list drives the storyboard, and later the metadata.
+
+**3. Worktrees.** Before and after each get a throwaway git worktree, so the agent never touches my checkout. For an Expo app, the dev client's fingerprint must match the worktree.
+
+**4. Capture.** Web pages are filmed over the Chrome DevTools Protocol from timestamped frames, resampled to a steady 30 fps. A fixed-rate recorder drops frames when the page is slow, and dropped frames look exactly like the jank you're trying to review. Apps go through [argent](https://github.com/software-mansion/argent) on a cloned iOS simulator ([simslim](https://github.com/MobAI-App/simslim) makes the clones).
+
+**5. One manifest.** Each clip is a folder with a `props.json` and its media. A plain TypeScript function, `timeline(props)`, validates it and computes every beat, caption and duration in frames. The render, the checks and the metadata all call the same function, so they can't disagree about what's on screen at frame 312.
+
+**6. Render.** Remotion renders a high-quality master. ffmpeg then levels a voiced clip to −16 LUFS and makes a share copy under 5 MB that starts playing at once, with the agent notes written into the file.
+
+**7. Checks.** One script, one row per rule, and every row must pass: duration, format, caption fit, a quiet browser console, size, loudness, a QR code that decodes. My favourite renders one mid-motion frame twice and compares the hashes. Every frame must be a pure function of the frame number, so the same props always give the same video.
+
+**8. A human yes.** The agent never posts anything. It opens the clip, lists every oddity it saw and kept, and waits.
+
+The stack, all of it local:
+
+| Part | What I use | Why |
+| --- | --- | --- |
+| Renderer | Remotion 4.0.520, pinned | Video as React components. Free for individuals and companies of up to 3 people |
+| Voice | Kokoro-82M (`af_heart`) | Runs on the CPU, about 5× real time, Apache-2.0. About 340 MB of model files |
+| Sounds | A small kit made with earshot | A tick on each bracket, a swish on each wipe |
+| Font | Schibsted Grotesk | Open licence, and it's this site's font |
+| Encode | ffmpeg 9 | Colour tags, loudness, the share copy, the metadata |
+| Web capture | Chrome over CDP | Timestamped frames, touch on phone sizes |
+| App capture | argent and simslim | Taps, swipes and recordings on cloned simulators |
+
+### Rules that came from mistakes
+
+The studio has a short file of house rules, and almost every one is there because something went wrong once.
+
+- **Real recordings beat stills.** If something moves (a drag, typing, a transition), it's recorded, even if the clip gets longer.
+- **Corner brackets, never a ring.** A closed ring around a button reads as a border the button has. A spotlight that dims the rest of the page was worse: viewers took the dimmed page for the real UI.
+- **The result first.** The after state and the reason for the change within three seconds. No intro card.
+- **Captions are short and spoken.** At most two lines of 42 characters and 17 characters per second. The voice reads every caption word for word, and the render fails if a caption was edited and the voice line wasn't.
+- **Never pick a motion from stills.** Options are rendered as clips and stacked side by side. A look that won on stills once failed the moment it moved.
+- **A local voice that sounds human.** macOS `say` was robotic, and XTTS has a non-commercial licence. Kokoro is small, fast and local.
+- **A fresh session per clip.** One clip started in a session that already held 323,000 tokens of context, and read 208 million cached tokens before it was done.
+
+## Notes for agents, inside the video
+
+This is the part I'm most pleased with.
+
+Agents skip videos. When a teammate's agent picks up a ticket, it reads the description and the comments and sees an attachment called `clip.mp4`. It can't watch it, so it moves on. The clip holds the best description of the change there is, and it's invisible to every agent that touches the ticket after me.
+
+So every share copy carries notes for agents in its `comment` tag: one line of JSON, inside the mp4 itself. Any agent with ffprobe can read it:
+
+```bash
+ffprobe -v error -show_entries format_tags=comment \
+  -of default=nw=1:nk=1 clip.mp4 | jq .
+```
+
+Here is part of it, from the clip at the top of this post:
+
+```json
+{
+  "why": "Readers reach the end of a post with nowhere to go but back to the list.",
+  "pr": {
+    "repo": "jeltehomminga/stellar-portfolio",
+    "number": 9,
+    "base": "cf8aafb8c936",
+    "commit": "9890ee21783f"
+  },
+  "chapters": [
+    {
+      "kind": "pair",
+      "startMs": 0,
+      "endMs": 10533,
+      "atMs": 6667,
+      "caption": "Each post now ends with its Older and Newer post, above All posts.",
+      "route": "/blog/figma-pixel-perfect-with-ai",
+      "files": ["src/components/post-pager.tsx", "src/app/blog/[slug]/page.tsx"],
+      "reach": "Open /blog/figma-pixel-perfect-with-ai at 1350x760 and scroll to the end..."
+    }
+  ],
+  "notShown": [
+    {
+      "state": "No older and no newer post: the pager renders nothing",
+      "why": "Only happens with a single post; the blog has four."
+    }
+  ],
+  "howToRead": "Captions burned in, and a voice reads each one; frame = ms * 30 / 1000. ..."
+}
+```
+
+Each field is there for someone:
+
+- **For developers:** per chapter, the files and the render branch that produce what's on screen, and the translation keys. An agent asked to change this feature knows where to start.
+- **For testers:** `reach` says how to get each state by hand. `notShown` lists what the clip leaves out and why, so nobody assumes it was tested on film.
+- **For everyone:** the captions with their timings, so the clip can be searched and quoted. `atMs` is a frame where each chapter has landed, and `howToRead` tells the agent how to grab it: `ffmpeg -ss 6.667 -i clip.mp4 -frames:v 1 frame.png`. An agent that can look at images can now look at the exact frame that matters.
+
+A few decisions made it work:
+
+- **Inside the file, never beside it.** A sidecar JSON gets lost the first time someone forwards the clip. The tag adds about 7 KB to a 3 MB file, leaves the video and audio streams untouched, and survives a round trip through an issue tracker and a chat app byte for byte.
+- **Built from the same function as the render.** The notes come from `props.json` and `timeline()`, so they can't describe a different clip than the one you see.
+- **ASCII only.** Every non-ASCII character is written as `\uXXXX`. `strings` cuts a line at the first non-ASCII byte, and `strings clip.mp4 | grep '"why"'` is the fallback for an agent without ffprobe.
+- **It refuses to leak.** Before writing, a guard checks every value against a list of identifier patterns (emails, account numbers, anything you add) and stops the render if one appears in full.
+- **A hint under the clip.** When I post a clip, a small line under it says the mp4 holds JSON for agents and gives the ffprobe command. Without that line, no agent would think to look.
+
+Try it on the clip at the top of this post: download it from the player's menu and run the command above.
+
+Two problems are still open. Some MCP servers can list an attachment but can't download it, so an agent needs a plain API call with the user's token to get the file. And there's no shared convention for this, so for now only agents that are told to look will find the notes. Proper mp4 chapter markers would be a good next step.
+
+## Release videos
+
+For a sprint demo I don't want a voice or a narrator in the video. The person presenting talks; the film runs behind them. So the showcase is music only, and everything is cut to the music.
+
+<VideoClip src="/videos/release-stellar-november.mp4" poster="/videos/release-stellar-november.jpg" caption="This site's November release: the redesign, dark mode, the new post links and sharper share images. Music only, cut to the beat. Music: Future Technology by FASSounds, via Pixabay." />
+
+- **Scenes last whole bars.** A small script measures the track's tempo, its first downbeat and the loudness of each bar, so the quiet bar before the drop shows up.
+- **One big flip.** The old version holds for a bar, then the new one wipes over it in place on the drop.
+- **Words rise out of a line,** one per eighth note, and leave upward on the cut.
+- **Real components, not mock-ups.** Cut-outs captured from the real site at a high pixel ratio, frame-stepped through their own animations, and a wall of them landing in a wave.
+
+## Make your own
+
+The studio and the skill are open source: [jeltehomminga/pr-clip](https://github.com/jeltehomminga/pr-clip), MIT. It makes the pull request clips; the release videos aren't in it yet.
+
+1. **Install the skill.** `git clone https://github.com/jeltehomminga/pr-clip ~/.claude/skills/pr-clip`
+2. **Install the tools.** macOS, Node 24, ffmpeg, jq and the `gh` CLI (`brew install node ffmpeg jq gh`). Chrome for web clips. For app clips: Xcode, argent and simslim.
+3. **Ask for a clip.** In Claude Code: "a PR clip of owner/repo#42". On first use it copies the studio to `~/pr-clip-studio`, installs it and renders the built-in example to prove the setup.
+4. **Try it on the demo app.** [jeltehomminga/pr-clip-demo](https://github.com/jeltehomminga/pr-clip-demo) is the made-up plant app from the second clip, with one open pull request. Clone it, open Claude Code in it, and ask for "a PR clip of jeltehomminga/pr-clip-demo#1".
+5. **Make it yours.** Every colour lives in `brand.ts`: swap it for your own look, and add your own identifier patterns to `identifiers.json`.
+
+Read Remotion's licence before you use it at a company of more than three people: they need a company licence. argent's source is Apache-2.0, but some of its binaries are not open.
+
+## The Bottom Line
+
+A pull request with a 30-second clip gets a better review than one with a screenshot, and an agent will happily do the twenty tedious steps that make a good clip, every time, the same way. Give it a procedure, give it checks it can't argue with, and keep the last yes for yourself.
+
+And if you put a video anywhere an agent will find it, give that agent something to read. One line of JSON in the comment tag is all it takes.
+
+---
+
+_Jelte Homminga is an AI-first Frontend Engineer at [Stellar Web Development](https://stellar-web.dev), building enterprise-grade web and mobile apps from Bali. Connect on [LinkedIn](https://linkedin.com/in/jeltehomminga) or check out his work on [GitHub](https://github.com/jeltehomminga)._

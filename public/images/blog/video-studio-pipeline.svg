@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540" font-family="Schibsted Grotesk, ui-sans-serif, system-ui, -apple-system, sans-serif">
+  <title>From pull request to clip: facts, inventory, worktrees and capture feed one props.json; timeline() computes every frame for the render, the checks and the agent notes; the clip waits for a human yes.</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#74706a"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="540" rx="12" fill="#faf9f6"/>
+
+  <g fill="#ffffff" stroke="#e4e1da" stroke-width="1.5">
+    <rect x="40" y="60" width="196" height="84" rx="8"/>
+    <rect x="268" y="60" width="196" height="84" rx="8"/>
+    <rect x="496" y="60" width="196" height="84" rx="8"/>
+    <rect x="724" y="60" width="196" height="84" rx="8"/>
+    <rect x="952" y="60" width="208" height="84" rx="8"/>
+    <rect x="40" y="322" width="196" height="84" rx="8"/>
+    <rect x="520" y="250" width="200" height="64" rx="8"/>
+    <rect x="520" y="332" width="200" height="64" rx="8"/>
+    <rect x="520" y="414" width="200" height="64" rx="8"/>
+    <rect x="776" y="322" width="180" height="84" rx="8"/>
+  </g>
+  <rect x="268" y="322" width="196" height="84" rx="8" fill="#ffffff" stroke="#065563" stroke-width="2.5"/>
+  <rect x="984" y="322" width="176" height="84" rx="8" fill="#065563"/>
+
+  <g fill="none" stroke="#74706a" stroke-width="1.75" marker-end="url(#arrow)">
+    <path d="M240 102 H264"/>
+    <path d="M468 102 H492"/>
+    <path d="M696 102 H720"/>
+    <path d="M924 102 H948"/>
+    <path d="M1056 148 V200 H138 V316"/>
+    <path d="M240 364 H264"/>
+    <path d="M468 364 L516 284"/>
+    <path d="M468 364 H516"/>
+    <path d="M468 364 L516 444"/>
+    <path d="M724 282 L772 360"/>
+    <path d="M724 364 H772"/>
+    <path d="M724 446 L772 368"/>
+    <path d="M960 364 H980"/>
+  </g>
+
+  <g font-size="20" font-weight="600" fill="#1c1b19">
+    <text x="58" y="96">Pull request</text>
+    <text x="286" y="96">1 · Facts</text>
+    <text x="514" y="96">2 · Inventory</text>
+    <text x="742" y="96">3 · Worktrees</text>
+    <text x="970" y="96">4 · Capture</text>
+    <text x="58" y="358">5 · props.json</text>
+    <text x="286" y="358" fill="#065563">timeline()</text>
+    <text x="538" y="280">6 · Render</text>
+    <text x="538" y="362">7 · Checks</text>
+    <text x="538" y="444">Agent notes</text>
+    <text x="794" y="358">clip.mp4</text>
+    <text x="1002" y="358" fill="#ffffff">8 · Human yes</text>
+  </g>
+  <g font-size="15" fill="#63605a">
+    <text x="58" y="124">owner/repo#42</text>
+    <text x="286" y="124">gh and git, read-only</text>
+    <text x="514" y="124">every state, in or out</text>
+    <text x="742" y="124">before and after builds</text>
+    <text x="970" y="124">Chrome CDP · argent</text>
+    <text x="58" y="386">the one manifest</text>
+    <text x="286" y="386">every frame, computed</text>
+    <text x="538" y="302">Remotion, then ffmpeg</text>
+    <text x="538" y="384">one row per rule</text>
+    <text x="538" y="466">JSON in the comment tag</text>
+    <text x="794" y="386">3 MB, notes inside</text>
+    <text x="1002" y="386" fill="#d9ecef">before any post</text>
+  </g>
+</svg>

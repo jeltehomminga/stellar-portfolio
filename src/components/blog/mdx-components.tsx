@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { Caption } from "./caption"
 import { ThemeGrid } from "./theme-grid"
 import { LighthouseComparison } from "./lighthouse-comparison"
+import { VideoClip } from "./video-clip"
 
 type BlogImageProps = {
   src?: string
@@ -77,6 +78,7 @@ export const mdxComponents: MDXComponents = {
   img: BlogImage as MDXComponents["img"],
   ThemeGrid,
   LighthouseComparison,
+  VideoClip,
   Image: ({ className, alt, ...props }: React.ComponentProps<typeof Image>) => (
     <Image
       {...props}
