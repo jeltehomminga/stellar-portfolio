@@ -57,7 +57,10 @@ Everything is a Server Component except the theme toggle and the hidden easter e
 | `blog/mdx-components.tsx` | Server | MDX element map (headings, links, figures + captions, code, tables) |
 | `blog/caption.tsx` | Server | Shared `<figcaption>` |
 | `blog/theme-grid.tsx`, `blog/lighthouse-comparison.tsx` | Server | Figure components used by the first post |
-| `blog/video-clip.tsx` | Server | `<VideoClip src poster caption />`: a video figure with native controls and `preload="none"`. Files in `public/videos/` are copied byte for byte, so each mp4 keeps the agent notes in its `comment` tag |
+| `blog/video-clip.tsx` | Server | `<VideoClip src poster caption />`: a video figure with native controls and `preload="none"`. Files in `public/videos/` are copied byte for byte, so each mp4 keeps the agent notes in its `comment` tag. A line under each clip says so, for agents reading the page |
+| `blog/pipeline-diagram.tsx` | Server | Inline SVG of the video studio pipeline, drawn with the colour tokens so it follows the theme toggle |
+
+MDX gotcha: `next-mdx-remote` strips `{…}` expressions, so JSX props in posts must be strings (`width="1200"`, not `width={1200}`).
 
 ### Key Files
 
