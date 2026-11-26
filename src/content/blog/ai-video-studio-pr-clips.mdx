@@ -86,6 +86,8 @@ This is the part I'm most pleased with.
 
 Agents skip videos. When a teammate's agent picks up a ticket, it reads the description and the comments and sees an attachment called `clip.mp4`. It can't watch it, so it moves on. The clip holds the best description of the change there is, and it's invisible to every agent that touches the ticket after me.
 
+The idea came from Builder.io's [Clips](https://www.builder.io/blog/agent-native-clips-captures-browser-errors), an open-source Loom alternative whose recordings carry context a coding agent can read, such as the browser errors behind a bug. I wanted the same for the clips I attach to pull requests and tickets, wherever they end up.
+
 So every share copy carries notes for agents in its `comment` tag: one line of JSON, inside the mp4 itself. Any agent with ffprobe can read it:
 
 ```bash
@@ -171,6 +173,10 @@ The studio and the skill are open source: [jeltehomminga/pr-clip](https://github
 5. **Make it yours.** Every colour lives in `brand.ts`: swap it for your own look, and add your own identifier patterns to `identifiers.json`.
 
 Read Remotion's licence before you use it at a company of more than three people: they need a company licence. argent's source is Apache-2.0, but some of its binaries are not open.
+
+## Thanks
+
+None of this exists without open source. [Remotion](https://www.remotion.dev) turns React components into video and runs the whole studio. [FFmpeg](https://ffmpeg.org) does the quiet work in every step: colour tags, loudness, the share copy, and the comment tag that carries the agent notes. [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M) gives every clip a voice on my own machine, argent and simslim drive the iOS simulator, and [Schibsted Grotesk](https://fonts.google.com/specimen/Schibsted+Grotesk) sets every caption. Thank you to everyone who builds and looks after them.
 
 ## The Bottom Line
 
