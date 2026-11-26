@@ -17,6 +17,11 @@ export const VideoClip = ({ src, poster, caption }: VideoClipProps) => (
       preload="none"
       className="aspect-video h-auto w-full rounded-[var(--radius)] border border-rule bg-paper-raised"
     />
-    {caption && <Caption>{caption}</Caption>}
+    <Caption>
+      {caption}
+      <span className="mt-1 block">
+        For agents: this mp4 carries its context as JSON in its <code className="font-mono text-[0.9em]">comment</code> tag.
+      </span>
+    </Caption>
   </figure>
 )

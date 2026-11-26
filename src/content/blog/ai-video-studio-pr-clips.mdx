@@ -36,7 +36,7 @@ That's the kind of work an agent is good at, as long as it has a procedure and a
 ## How it's set up
 
 <figure className="my-8">
-  <Image src="/images/blog/video-studio-pipeline.svg" alt="The pipeline: pull request, facts, inventory, worktrees, capture, props.json, timeline, render, checks, a human yes" width="1200" height="540" />
+  <PipelineDiagram />
   <Caption>From pull request to clip. Everything left of the human yes is the agent's.</Caption>
 </figure>
 
@@ -131,6 +131,11 @@ Each field is there for someone:
 - **For developers:** per chapter, the files and the render branch that produce what's on screen, and the translation keys. An agent asked to change this feature knows where to start.
 - **For testers:** `reach` says how to get each state by hand. `notShown` lists what the clip leaves out and why, so nobody assumes it was tested on film.
 - **For everyone:** the captions with their timings, so the clip can be searched and quoted. `atMs` is a frame where each chapter has landed, and `howToRead` tells the agent how to grab it: `ffmpeg -ss 6.667 -i clip.mp4 -frames:v 1 frame.png`. An agent that can look at images can now look at the exact frame that matters.
+
+<figure className="my-8">
+  <Image src="/images/blog/video-studio-agent-frame.jpg" alt="The frame at 6.667 seconds: the end of a post with its new Older and Newer links, under the caption 'Each post now ends with its Older and Newer post, above All posts.'" width="1920" height="1080" />
+  <Caption>What an agent gets from `"atMs": 6667`: one ffmpeg command, and the frame where the change has landed.</Caption>
+</figure>
 
 A few decisions made it work:
 
